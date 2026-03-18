@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('precio', 8, 2);
             $table->string('url_imagen')->nullable();
             $table->boolean('es_recomendado')->default(false);
-            $table->integer('ventas_totales')->default(0);
             $table->timestamps();
         });
     }

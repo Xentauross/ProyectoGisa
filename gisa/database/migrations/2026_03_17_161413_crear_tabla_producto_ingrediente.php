@@ -10,6 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Tabla pivote Many-to-Many: un producto tiene muchos ingredientes y viceversa
         Schema::create('producto_ingrediente', function (Blueprint $table) {
             $table->id();
             $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
