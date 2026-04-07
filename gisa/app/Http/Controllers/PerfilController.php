@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Perfil;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class PerfilController extends Controller
+{
+    public function index(): Response
+    {
+        $perfiles = Perfil::with('user')->latest()->paginate(20);
+
+        return Inertia::render('Perfiles/Index', [
+            'perfiles' => $perfiles,
+        ]);
+    }
+
+    public function create(): Response
+    {
+        // Solo usuarios que aún no tienen perfil
+        $users = User::doesntHave('perfil')->orderBy('name')->get(['id', 'name']);
+
+        return Inertia::render('Perfiles/Create', [
+            'users' => $users,
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'user_id'              => 'required|integer|exists:users,id|unique:perfiles,user_id',
+            'nombre'               => 'required|string|max:255',
+            'apellido1'            => 'required|string|max:255',
+            'apellido2'            => 'nullable|string|max:255',
+            'dni'                  => 'required|string|max:20|unique:perfiles,dni',
+            'num_seguridad_social' => 'required|string|max:30|unique:perfiles,num_seguridad_social',
+            'telefono'             => 'required|string|max:20',
+            'fecha_nacimiento'     => 'required|date|before:today',
+            'localidad'            => 'required|string|max:255',
+        ]);
+
+        Perfil::create($request->all());
+
+        return redirect()->route('perfiles.index')
+            ->with('success', 'Perfil creado correctamente.');
+    }
+
+    public function show(Perfil $perfil): Response
+    {
+        return Inertia::render('Perfiles/Show', [
+            'perfil' => $perfil->load('user'),
+        ]);
+    }
+
+    public function edit(Perfil $perfil): Response
+    {
+        $users = User::orderBy('name')->get(['id', 'name']);
+
+        return Inertia::render('Perfiles/Edit', [
+            'perfil' => $perfil->load('user'),
+            'users'  => $users,
+        ]);
+    }
+
+    public function update(Request $request, Perfil $perfil): RedirectResponse
+    {
+        $request->validate([
+            'user_id'              => ['required', 'integer', 'exists:users,id', Rule::unique('perfiles', 'user_id')->ignore($perfil->id)],
+            'nombre'               => 'required|string|max:255',
+            'apellido1'            => 'required|string|max:255',
+            'apellido2'            => 'nullable|string|max:255',
+            'dni'                  => ['required', 'string', 'max:20', Rule::unique('perfiles', 'dni')->ignore($perfil->id)],
+            'num_seguridad_social' => ['required', 'string', 'max:30', Rule::unique('perfiles', 'num_seguridad_social')->ignore($perfil->id)],
+            'telefono'             => 'required|string|max:20',
+            'fecha_nacimiento'     => 'required|date|before:today',
+            'localidad'            => 'required|string|max:255',
+        ]);
+
+        $perfil->update($request->all());
+
+        return redirect()->route('perfiles.index')
+            ->with('success', 'Perfil actualizado correctamente.');
+    }
+
+    public function destroy(Perfil $perfil): RedirectResponse
+    {
+        $perfil->delete();
+
+        return redirect()->route('perfiles.index')
+            ->with('success', 'Perfil eliminado correctamente.');
+    }
+}
