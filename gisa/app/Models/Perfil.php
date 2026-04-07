@@ -1,38 +1,35 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Models;
 
-return new class extends Migration
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Perfil extends Model
 {
-    public function up(): void
+    protected $table = 'perfiles';
+
+    protected $fillable = [
+        'user_id',
+        'nombre',
+        'apellido1',
+        'apellido2',
+        'dni',
+        'num_seguridad_social',
+        'telefono',
+        'fecha_nacimiento',
+        'localidad',
+    ];
+
+    protected function casts(): array
     {
-        Schema::create('perfiles', function (Blueprint $table) {
-            $table->id();
-
-            // Relación 1-a-1 con users
-            $table->foreignId('user_id')
-                ->unique()
-                ->constrained('users')
-                ->onDelete('cascade');
-
-            // Datos personales del negocio
-            $table->string('nombre');
-            $table->string('apellido1');
-            $table->string('apellido2')->nullable();
-            $table->string('dni')->unique();
-            $table->string('num_seguridad_social')->unique();
-            $table->string('telefono');
-            $table->date('fecha_nacimiento');
-            $table->string('localidad');
-
-            $table->timestamps();
-        });
+        return [
+            'fecha_nacimiento' => 'date',
+        ];
     }
 
-    public function down(): void
+    public function user(): BelongsTo
     {
-        Schema::dropIfExists('perfiles');
+        return $this->belongsTo(User::class);
     }
-};
+}

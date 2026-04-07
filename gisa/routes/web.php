@@ -5,13 +5,14 @@ use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\MesaController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // -------------------------------------------------------
-// Rutas públicas de Breeze 
+// Página de bienvenida pública
 // -------------------------------------------------------
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -23,14 +24,14 @@ Route::get('/', function () {
 });
 
 // -------------------------------------------------------
-// Dashboard — redirige según rol tras login
+// Dashboard
 // -------------------------------------------------------
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // -------------------------------------------------------
-// Perfil de Breeze 
+// Perfil de Breeze (nombre/email del usuario logueado)
 // -------------------------------------------------------
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -39,37 +40,24 @@ Route::middleware('auth')->group(function () {
 });
 
 // -------------------------------------------------------
-// Solo admin: gestión de usuarios y perfiles
+// Admin / Gerente: usuarios, perfiles, horarios, mesas, productos
 // -------------------------------------------------------
 Route::middleware(['auth', 'verified', 'role:admin,gerente'])->group(function () {
     Route::resource('usuarios', UsuarioController::class);
-});
-
-// -------------------------------------------------------
-// Admin + metre: horarios, mesas y productos
-// -------------------------------------------------------
-Route::middleware(['auth', 'verified', 'role:admin,gerente'])->group(function () {
+    Route::resource('perfiles', PerfilController::class);
     Route::resource('horarios', HorarioController::class);
-    Route::resource('mesas', MesaController::class);
+    Route::resource('mesas',    MesaController::class);
     Route::resource('productos', ProductoController::class);
 });
 
 // -------------------------------------------------------
-// Admin + metre + camarero: gestión de pedidos
+// Admin + Metre + Camarero: pedidos
 // -------------------------------------------------------
 Route::middleware(['auth', 'verified', 'role:admin,metre,camarero'])->group(function () {
-    Route::resource('pedidos', PedidoController::class)->except(['destroy']);
-});
+    Route::resource('pedidos', PedidoController::class);
 
-// -------------------------------------------------------
-// Todos los roles: ver pedidos activos y turnos propios
-// -------------------------------------------------------
-Route::middleware(['auth', 'verified', 'role:admin,metre,camarero'])->group(function () {
-    Route::get('pedidos',                   [PedidoController::class,  'index'])    ->name('pedidos.index');
-    Route::get('horarios/mis-turnos',       [HorarioController::class, 'misTurnos'])->name('horarios.mis-turnos');
-
-    // Cambio de estado según rol (la lógica de qué rol puede qué estado va en el Controller/Policy)
-    Route::patch('pedidos/{pedido}/estado', [PedidoController::class,  'cambiarEstado'])->name('pedidos.estado');
+    Route::post('pedidos/{pedido}/lineas',           [PedidoController::class, 'addLinea'])->name('pedidos.addLinea');
+    Route::delete('pedidos/{pedido}/lineas/{linea}', [PedidoController::class, 'removeLinea'])->name('pedidos.removeLinea');
 });
 
 // -------------------------------------------------------

@@ -18,9 +18,21 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        // 1. Cargamos el usuario actual junto con su perfil y sus horarios.
+        // Ordenamos los horarios para que vea los más recientes o próximos primero.
+        $user = $request->user()->load([
+            'perfil', 
+            'horarios' => function ($query) {
+                $query->orderBy('inicio_turno', 'desc');
+            }
+        ]);
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+
+            // 2. Pasamos los datos adicionales a la vista de Inertia
+            'miPerfil'        => $user->perfil,
+            'misHorarios'     => $user->horarios,
         ]);
     }
 
