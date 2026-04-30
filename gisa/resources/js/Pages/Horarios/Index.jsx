@@ -1,0 +1,112 @@
+import { Head, Link, router } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+
+const colores = {
+    pendiente: 'bg-yellow-100 text-yellow-700',
+    confirmado: 'bg-green-100 text-green-700',
+    cancelado: 'bg-red-100 text-red-700',
+};
+
+export default function Index({ auth, horarios }) {
+    function eliminar(id) {
+        if (!confirm('¿Eliminar este horario?')) return;
+        router.delete(route('horarios.destroy', id));
+    }
+
+    return (
+        <AuthenticatedLayout
+            user={auth.user}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Horarios</h2>}
+        >
+            <Head title="Horarios" />
+
+            <div className="py-8">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                    <div className="flex justify-between items-center mb-6">
+                        <h1 className="text-2xl font-semibold text-gray-800">Horarios</h1>
+                        <Link
+                            href={route('horarios.create')}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+                        >
+                            Nuevo horario
+                        </Link>
+                    </div>
+
+                    <div className="bg-white shadow rounded-lg overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse" style={{ minWidth: '600px' }}>
+                                <thead className="bg-gray-50 text-left text-sm text-gray-600">
+                                    <tr>
+                                        <th className="p-4">Empleado</th>
+                                        <th className="p-4">Inicio turno</th>
+                                        <th className="p-4">Fin turno</th>
+                                        <th className="p-4">Estado</th>
+                                        <th className="p-4">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {horarios.data.map((horario) => (
+                                        <tr key={horario.id} className="border-t hover:bg-gray-50">
+                                            <td className="p-4 font-medium">{horario.user?.name}</td>
+                                            <td className="p-4 text-sm text-gray-600">
+                                                {new Date(horario.inicio_turno).toLocaleString('es-ES', {
+                                                    day: '2-digit', month: '2-digit', year: 'numeric',
+                                                    hour: '2-digit', minute: '2-digit'
+                                                })}
+                                            </td>
+                                            <td className="p-4 text-sm text-gray-600">
+                                                {new Date(horario.fin_turno).toLocaleString('es-ES', {
+                                                    day: '2-digit', month: '2-digit', year: 'numeric',
+                                                    hour: '2-digit', minute: '2-digit'
+                                                })}
+                                            </td>
+                                            <td className="p-4">
+                                                <span className={`px-2 py-1 rounded text-xs font-medium ${colores[horario.estado]}`}>
+                                                    {horario.estado}
+                                                </span>
+                                            </td>
+                                            <td className="p-4 flex gap-3">
+                                                <Link
+                                                    href={route('horarios.edit', horario.id)}
+                                                    className="text-blue-600 hover:underline text-sm"
+                                                >
+                                                    Editar
+                                                </Link>
+                                                <button
+                                                    onClick={() => eliminar(horario.id)}
+                                                    className="text-red-600 hover:underline text-sm"
+                                                >
+                                                    Eliminar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {horarios.data.length === 0 && (
+                                        <tr>
+                                            <td colSpan={5} className="p-6 text-center text-gray-400 text-sm">
+                                                No hay horarios registrados
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="mt-4 flex gap-2 flex-wrap">
+                        {horarios.links.map((link, i) => (
+                            <Link
+                                key={i}
+                                href={link.url ?? '#'}
+                                className={`px-3 py-1 rounded border text-sm ${link.active ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'
+                                    } ${!link.url ? 'opacity-40 pointer-events-none' : ''}`}
+                                dangerouslySetInnerHTML={{ __html: link.label }}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+}
