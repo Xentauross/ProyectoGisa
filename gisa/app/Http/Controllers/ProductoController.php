@@ -19,6 +19,14 @@ class ProductoController extends Controller
             'productos' => $productos,
         ]);
     }
+    public function show(Producto $producto): Response
+    {
+    $producto->load('ingredientes');
+
+    return Inertia::render('Productos/Show', [
+        'producto' => $producto,
+    ]);
+    }
 
     public function create(): Response
     {
@@ -32,11 +40,11 @@ class ProductoController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'tipo'           => 'required|string|max:255',
-            'nombre'         => 'required|string|max:255',
+            'tipo'           => 'required|in:plato,bebida',
+            'nombre'         => 'required|string|max:40',
             'descripcion'    => 'nullable|string',
             'precio'         => 'required|numeric|min:0',
-            'url_imagen'     => 'nullable|url|max:255',
+            'url_imagen'     => 'nullable|url|max:150',
             'es_recomendado' => 'boolean',
             'ingredientes'   => 'nullable|array',
             'ingredientes.*' => 'integer|exists:ingredientes,id',
@@ -65,11 +73,11 @@ class ProductoController extends Controller
     public function update(Request $request, Producto $producto): RedirectResponse
     {
         $data = $request->validate([
-            'tipo'           => 'required|string|max:255',
-            'nombre'         => 'required|string|max:255',
+            'tipo'           => 'required|in:plato,bebida',
+            'nombre'         => 'required|string|max:40',
             'descripcion'    => 'nullable|string',
             'precio'         => 'required|numeric|min:0',
-            'url_imagen'     => 'nullable|url|max:255',
+            'url_imagen'     => 'nullable|url|max:150',
             'es_recomendado' => 'boolean',
             'ingredientes'   => 'nullable|array',
             'ingredientes.*' => 'integer|exists:ingredientes,id',

@@ -94,7 +94,7 @@ class PedidoController extends Controller
         $request->validate([
             'producto_id' => 'required|integer|exists:productos,id',
             'cantidad'    => 'required|integer|min:1',
-            'notas'       => 'nullable|string|max:500',
+            'notas'       => 'nullable|string|max:200',
         ]);
 
         $pedido->lineas()->create($request->only('producto_id', 'cantidad', 'notas'));

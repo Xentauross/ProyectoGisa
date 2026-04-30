@@ -35,14 +35,14 @@ class PerfilController extends Controller
     {
         $request->validate([
             'user_id'              => 'required|integer|exists:users,id|unique:perfiles,user_id',
-            'nombre'               => 'required|string|max:255',
-            'apellido1'            => 'required|string|max:255',
-            'apellido2'            => 'nullable|string|max:255',
-            'dni'                  => 'required|string|max:20|unique:perfiles,dni',
-            'num_seguridad_social' => 'required|string|max:30|unique:perfiles,num_seguridad_social',
-            'telefono'             => 'required|string|max:20',
+            'nombre'               => 'required|string|max:40',
+            'apellido1'            => 'required|string|max:40',
+            'apellido2'            => 'nullable|string|max:40',
+            'dni'                  => 'required|string|max:9|unique:perfiles,dni',
+            'num_seguridad_social' => 'required|string|max:12|unique:perfiles,num_seguridad_social',
+            'telefono'             => 'required|string|max:9',
             'fecha_nacimiento'     => 'required|date|before:today',
-            'localidad'            => 'required|string|max:255',
+            'localidad'            => 'required|string|max:100',
         ]);
 
         Perfil::create($request->all());
@@ -53,8 +53,9 @@ class PerfilController extends Controller
 
     public function show(Perfil $perfil): Response
     {
+        $perfil->load('user');  // carga la relación en el modelo
         return Inertia::render('Perfiles/Show', [
-            'perfil' => $perfil->load('user'),
+            'perfil' => $perfil,  // ahora manda el modelo ya con la relación cargada
         ]);
     }
 
@@ -72,14 +73,14 @@ class PerfilController extends Controller
     {
         $request->validate([
             'user_id'              => ['required', 'integer', 'exists:users,id', Rule::unique('perfiles', 'user_id')->ignore($perfil->id)],
-            'nombre'               => 'required|string|max:255',
-            'apellido1'            => 'required|string|max:255',
-            'apellido2'            => 'nullable|string|max:255',
-            'dni'                  => ['required', 'string', 'max:20', Rule::unique('perfiles', 'dni')->ignore($perfil->id)],
-            'num_seguridad_social' => ['required', 'string', 'max:30', Rule::unique('perfiles', 'num_seguridad_social')->ignore($perfil->id)],
-            'telefono'             => 'required|string|max:20',
+            'nombre'               => 'required|string|max:40',
+            'apellido1'            => 'required|string|max:40',
+            'apellido2'            => 'nullable|string|max:40',
+            'dni'                  => ['required', 'string', 'max:9', Rule::unique('perfiles', 'dni')->ignore($perfil->id)],
+            'num_seguridad_social' => ['required', 'string', 'max:12', Rule::unique('perfiles', 'num_seguridad_social')->ignore($perfil->id)],
+            'telefono'             => 'required|string|max:9',
             'fecha_nacimiento'     => 'required|date|before:today',
-            'localidad'            => 'required|string|max:255',
+            'localidad'            => 'required|string|max:100',
         ]);
 
         $perfil->update($request->all());
