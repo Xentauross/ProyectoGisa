@@ -28,7 +28,7 @@ class MesaController extends Controller
     {
         $request->validate([
             'numero' => 'required|integer|min:1|unique:mesas,numero',
-            'estado' => 'required|in:libre,ocupada',
+            'estado' => 'required|boolean',
         ]);
 
         Mesa::create($request->only('numero', 'estado'));
@@ -48,7 +48,7 @@ class MesaController extends Controller
     {
         $request->validate([
             'numero' => 'required|integer|min:1|unique:mesas,numero,' . $mesa->id,
-            'estado' => 'required|in:libre,ocupada',
+            'estado' => 'required|boolean',
         ]);
 
         $mesa->update($request->only('numero', 'estado'));

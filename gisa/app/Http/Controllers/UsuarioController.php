@@ -41,9 +41,10 @@ class UsuarioController extends Controller
             'dni'                  => 'required|string|max:9|unique:perfiles,dni',
             'email'                => 'required|email|max:100|unique:users,email',
             'num_seguridad_social' => 'required|string|max:12|unique:perfiles,num_seguridad_social',
-            'telefono'             => 'required|string|max:9',
+            'telefono'             => 'required|string|max:15',
             'fecha_nacimiento'     => 'required|date|before:today',
             'localidad'            => 'required|string|max:100',
+            'cuenta_bancaria'      => 'required|string|max:34|unique:perfiles,cuenta_bancaria',
             'role'                 => ['required', Rule::in(array_keys(self::roles()))],
         ]);
 
@@ -77,6 +78,7 @@ class UsuarioController extends Controller
             'telefono'             => $request->telefono,
             'fecha_nacimiento'     => $request->fecha_nacimiento,
             'localidad'            => $request->localidad,
+            'cuenta_bancaria'      => $request->cuenta_bancaria,
         ]);
 
         // ── Enviar email con credenciales ──────────────────────────────────
@@ -160,6 +162,7 @@ class UsuarioController extends Controller
             'camarero'    => 'Camarero',
             'jefe_cocina' => 'Jefe de cocina',
             'cocinero'    => 'Cocinero',
+            'aux_administrativo'    => 'Auxiliar Administrativo',
         ];
     }
 }

@@ -78,9 +78,10 @@ class PerfilController extends Controller
             'apellido2'            => 'nullable|string|max:40',
             'dni'                  => ['required', 'string', 'max:9', Rule::unique('perfiles', 'dni')->ignore($perfil->id)],
             'num_seguridad_social' => ['required', 'string', 'max:12', Rule::unique('perfiles', 'num_seguridad_social')->ignore($perfil->id)],
-            'telefono'             => 'required|string|max:9',
+            'telefono'             => 'required|string|max:15',
             'fecha_nacimiento'     => 'required|date|before:today',
             'localidad'            => 'required|string|max:100',
+            'cuenta_bancaria'      => ['required', 'string', 'max:34', Rule::unique('perfiles', 'cuenta_bancaria')->ignore($perfil->id)],
         ]);
 
         $perfil->update($request->all());

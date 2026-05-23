@@ -28,7 +28,6 @@ return new class extends Migration
             $table->date('fecha_nacimiento');
             $table->string('localidad');
             $table->string('cuenta_bancaria', 34)->unique();
-
             $table->timestamps();
         });
     }
