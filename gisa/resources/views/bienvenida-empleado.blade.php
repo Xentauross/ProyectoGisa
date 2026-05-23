@@ -207,7 +207,7 @@
             </div>
 
             <div class="aviso">
-                <strong>⚠ Cambia tu contraseña</strong> en cuanto accedas por primera vez.
+                <strong>Cambia tu contraseña</strong> en cuanto accedas por primera vez.
                 Ve a tu perfil y actualízala por una que solo conozcas tú.
                 Esta contraseña temporal ha sido generada automáticamente.
             </div>
