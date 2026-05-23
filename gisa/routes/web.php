@@ -94,7 +94,12 @@ Route::patch('mis-turnos/{horario}', function (\Illuminate\Http\Request $request
  
     return back()->with('success', 'Turno actualizado.');
 })->middleware(['auth', 'verified'])->name('mis-turnos.update');
+
 // -------------------------------------------------------
 // Rutas de autenticación de Breeze
 // -------------------------------------------------------
+
+Route::get('/register',  fn() => redirect('/login'))->name('register');
+Route::post('/register', fn() => redirect('/login'));
+
 require __DIR__.'/auth.php';

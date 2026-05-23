@@ -23,10 +23,11 @@ return new class extends Migration
             $table->string('apellido1');
             $table->string('apellido2')->nullable();
             $table->string('dni')->unique();
-            $table->string('num_seguridad_social')->unique();
-            $table->string('telefono');
+            $table->string('num_seguridad_social', 12)->unique();
+            $table->string('telefono', 15)->unique();
             $table->date('fecha_nacimiento');
             $table->string('localidad');
+            $table->string('cuenta_bancaria', 34)->unique();
 
             $table->timestamps();
         });

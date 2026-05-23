@@ -19,7 +19,12 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => 'test@gisa.es',
         ]);
-    }
+
+        $this->call([
+                    IngredienteSeeder::class, // Primero los ingredientes
+                    ProductoSeeder::class,    // Luego los productos (que dependen de los ingredientes)
+                ]);
+        }
 }

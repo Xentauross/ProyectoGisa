@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('mesas', function (Blueprint $table) {
             $table->id();
             $table->integer('numero')->unique();
-            $table->enum('estado', ['libre', 'ocupada'])->default('libre');
+            $table->boolean('estado')->default(false);
             $table->timestamps();
         });
     }

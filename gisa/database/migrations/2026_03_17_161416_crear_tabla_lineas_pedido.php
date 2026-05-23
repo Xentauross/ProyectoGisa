@@ -20,6 +20,7 @@ return new class extends Migration
                   ->onDelete('restrict');
 
             $table->integer('cantidad')->default(1);
+            $table->decimal('precio_unitario', 8, 2);
             $table->string('notas')->nullable();
             $table->timestamps();
         });
