@@ -46,6 +46,7 @@ class ProductoController extends Controller
             'precio'         => 'required|numeric|min:0',
             'url_imagen'     => 'nullable|url|max:150',
             'es_recomendado' => 'boolean',
+            'alergeno'       => 'string|max:45',
             'ingredientes'   => 'nullable|array',
             'ingredientes.*' => 'integer|exists:ingredientes,id',
         ]);
@@ -79,6 +80,7 @@ class ProductoController extends Controller
             'precio'         => 'required|numeric|min:0',
             'url_imagen'     => 'nullable|url|max:150',
             'es_recomendado' => 'boolean',
+            'alergeno'       => 'string|max:45',
             'ingredientes'   => 'nullable|array',
             'ingredientes.*' => 'integer|exists:ingredientes,id',
         ]);

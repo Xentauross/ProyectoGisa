@@ -97,10 +97,19 @@ class PedidoController extends Controller
             'notas'       => 'nullable|string|max:200',
         ]);
 
-        $pedido->lineas()->create($request->only('producto_id', 'cantidad', 'notas'));
+        // Buscamos el producto para obtener su precio actual
+        $producto = Producto::findOrFail($request->producto_id);
 
-        // Recalcular total
-        $total = $pedido->lineas()->with('producto')->get()->sum(fn($l) => $l->cantidad * $l->producto->precio);
+        //Guardamos la línea con el precio histórico
+        $pedido->lineas()->create([
+            'producto_id'     => $request->producto_id,
+            'cantidad'        => $request->cantidad,
+            'precio_unitario' => $producto->precio,
+            'notas'           => $request->notas,
+        ]);
+
+        // Recalculamos usando el precio de la línea, no el del producto
+        $total = $pedido->lineas()->get()->sum(fn($l) => $l->cantidad * $l->precio_unitario);
         $pedido->update(['precio_total' => $total]);
 
         return redirect()->route('pedidos.edit', $pedido);
@@ -111,7 +120,7 @@ class PedidoController extends Controller
     {
         $pedido->lineas()->findOrFail($lineaId)->delete();
 
-        $total = $pedido->lineas()->with('producto')->get()->sum(fn($l) => $l->cantidad * $l->producto->precio);
+        $total = $pedido->lineas()->get()->sum(fn($l) => $l->cantidad * $l->precio_unitario);
         $pedido->update(['precio_total' => $total]);
 
         return redirect()->route('pedidos.edit', $pedido);
