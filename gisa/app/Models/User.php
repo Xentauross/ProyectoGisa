@@ -42,6 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function esCamarero(): bool   { return $this->role === 'camarero'; }
     public function esJefeCocina(): bool { return $this->role === 'jefe_cocina'; }
     public function esCocinero(): bool   { return $this->role === 'cocinero'; }
+    public function esAuxiliar(): bool { return $this->role === 'aux_administrativo'; }
 
     public function puedeCrearPedidos(): bool
     {

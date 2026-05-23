@@ -15,6 +15,7 @@ class LineaPedido extends Model
         'pedido_id',
         'producto_id',
         'cantidad',
+        'precio_unitario',
         'notas',
     ];
 
@@ -25,7 +26,7 @@ class LineaPedido extends Model
     // Subtotal de la línea calculado dinámicamente
     public function getSubtotalAttribute(): float
     {
-        return $this->cantidad * $this->producto->precio;
+        return $this->cantidad * $this->precio_unitario;
     }
 
     // -------------------------------------------------------

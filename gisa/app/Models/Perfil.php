@@ -19,6 +19,7 @@ class Perfil extends Model
         'telefono',
         'fecha_nacimiento',
         'localidad',
+        'cuenta_bancaria',
     ];
 
     protected function casts(): array
