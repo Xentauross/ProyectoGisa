@@ -40,9 +40,10 @@ class PerfilController extends Controller
             'apellido2'            => 'nullable|string|max:40',
             'dni'                  => 'required|string|max:9|unique:perfiles,dni',
             'num_seguridad_social' => 'required|string|max:12|unique:perfiles,num_seguridad_social',
-            'telefono'             => 'required|string|max:9',
+            'telefono'             => 'required|string|max:15',
             'fecha_nacimiento'     => 'required|date|before:today',
             'localidad'            => 'required|string|max:100',
+            'cuenta_bancaria'      => 'required|string|max:34|unique:perfiles,cuenta_bancaria',
         ]);
 
         Perfil::create($request->all());
@@ -61,6 +62,12 @@ class PerfilController extends Controller
 
     public function edit(Perfil $perfil): Response
     {
+        // Permite al propio usuario o a admin/gerente
+        abort_if(
+            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente']),
+            403
+        );
+
         $users = User::orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Perfiles/Edit', [
@@ -71,12 +78,18 @@ class PerfilController extends Controller
 
     public function update(Request $request, Perfil $perfil): RedirectResponse
     {
+        // Permite al propio usuario o a admin/gerente
+        abort_if(
+            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente']),
+            403
+        );
+
         $request->validate([
             'user_id'              => ['required', 'integer', 'exists:users,id', Rule::unique('perfiles', 'user_id')->ignore($perfil->id)],
             'nombre'               => 'required|string|max:40',
             'apellido1'            => 'required|string|max:40',
             'apellido2'            => 'nullable|string|max:40',
-            'dni'                  => ['required', 'string', 'max:9', Rule::unique('perfiles', 'dni')->ignore($perfil->id)],
+            'dni'                  => ['required', 'string', 'max:9',  Rule::unique('perfiles', 'dni')->ignore($perfil->id)],
             'num_seguridad_social' => ['required', 'string', 'max:12', Rule::unique('perfiles', 'num_seguridad_social')->ignore($perfil->id)],
             'telefono'             => 'required|string|max:15',
             'fecha_nacimiento'     => 'required|date|before:today',
@@ -86,9 +99,13 @@ class PerfilController extends Controller
 
         $perfil->update($request->all());
 
-        return redirect()->route('perfiles.index')
-            ->with('success', 'Perfil actualizado correctamente.');
-    }
+        // Redirige según quién actualizó
+        $destino = $perfil->user_id === auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente'])
+            ? redirect()->route('dashboard')->with('success', 'Perfil actualizado correctamente.')
+            : redirect()->route('perfiles.index')->with('success', 'Perfil actualizado correctamente.');
+
+        return $destino;
+    }   
 
     public function destroy(Perfil $perfil): RedirectResponse
     {

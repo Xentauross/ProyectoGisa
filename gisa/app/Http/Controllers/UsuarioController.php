@@ -32,34 +32,32 @@ class UsuarioController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'nombre'               => 'required|string|max:40',
-            'apellido1'            => 'required|string|max:40',
-            'apellido2'            => 'nullable|string|max:40',
-            'dni'                  => 'required|string|max:9|unique:perfiles,dni',
-            'email'                => 'required|email|max:100|unique:users,email',
-            'num_seguridad_social' => 'required|string|max:12|unique:perfiles,num_seguridad_social',
-            'telefono'             => 'required|string|max:15',
-            'fecha_nacimiento'     => 'required|date|before:today',
-            'localidad'            => 'required|string|max:100',
-            'cuenta_bancaria'      => 'required|string|max:34|unique:perfiles,cuenta_bancaria',
-            'role'                 => ['required', Rule::in(array_keys(self::roles()))],
-        ]);
+public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'nombre'               => 'required|string|max:40',
+        'apellido1'            => 'required|string|max:40',
+        'apellido2'            => 'nullable|string|max:40',
+        'dni'                  => 'required|string|max:9|unique:perfiles,dni',
+        'email'                => 'required|email|max:100|unique:users,email',
+        'num_seguridad_social' => 'required|string|max:12|unique:perfiles,num_seguridad_social',
+        'telefono'             => 'required|string|max:15',
+        'fecha_nacimiento'     => 'required|date|before:today',
+        'localidad'            => 'required|string|max:100',
+        'cuenta_bancaria'      => 'required|string|max:34|unique:perfiles,cuenta_bancaria',
+        'role'                 => ['required', Rule::in(array_keys(self::roles()))],
+    ]);
 
-        // ── Generar nombre de usuario ──────────────────────────────────────
-        $nombre    = $request->nombre;
-        $apellido1 = $request->apellido1;
-        $apellido2 = $request->apellido2 ?? '';
-        $dni       = $request->dni;
+    $nombre    = $request->nombre;
+    $apellido1 = $request->apellido1;
+    $apellido2 = $request->apellido2 ?? '';
+    $dni       = $request->dni;
 
-        $username = self::generarUsername($nombre, $apellido1, $apellido2, $dni);
+    $username         = self::generarUsername($nombre, $apellido1, $apellido2, $dni);
+    $passwordTemporal = Str::random(10);
 
-        // ── Contraseña temporal ────────────────────────────────────────────
-        $passwordTemporal = Str::random(10);
-
-        // ── Crear usuario ──────────────────────────────────────────────────
+    // ── Crear usuario y perfil en una transacción ──────────────────────
+    $usuario = \DB::transaction(function () use ($request, $nombre, $apellido1, $apellido2, $dni, $username, $passwordTemporal) {
         $usuario = User::create([
             'name'     => $username,
             'email'    => $request->email,
@@ -67,7 +65,6 @@ class UsuarioController extends Controller
             'role'     => $request->role,
         ]);
 
-        // ── Crear perfil asociado ──────────────────────────────────────────
         Perfil::create([
             'user_id'              => $usuario->id,
             'nombre'               => $nombre,
@@ -81,12 +78,24 @@ class UsuarioController extends Controller
             'cuenta_bancaria'      => $request->cuenta_bancaria,
         ]);
 
-        // ── Enviar email con credenciales ──────────────────────────────────
+        return $usuario;
+    });
+
+    // ── Enviar email (fallo no crítico) ────────────────────────────────
+    $emailEnviado = true;
+    try {
         Mail::to($usuario->email)
             ->send(new BienvenidaEmpleado($usuario, $passwordTemporal));
+    } catch (\Exception $e) {
+        $emailEnviado = false;
+        \Log::error("Email bienvenida fallido para {$usuario->email}: " . $e->getMessage());
+    }
 
-        return redirect()->route('usuarios.index')
-            ->with('success', "Usuario {$username} creado. Credenciales enviadas a {$usuario->email}.");
+    $mensaje = $emailEnviado
+        ? "Usuario {$username} creado. Credenciales enviadas a {$usuario->email}."
+        : "Usuario {$username} creado, pero el email no pudo enviarse. Contraseña temporal: {$passwordTemporal}";
+
+    return redirect()->route('usuarios.index')->with('success', $mensaje);
     }
 
     public function show(User $usuario): Response

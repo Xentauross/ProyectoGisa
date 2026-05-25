@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Mail\HorarioAsignado;
+use Illuminate\Support\Facades\Mail;
 
 class HorarioController extends Controller
 {
     public function index(): Response
     {
-        $horarios = Horario::with('user')->latest('inicio_turno')->paginate(20);
+        $horarios = Horario::with('user.perfil')->latest('inicio_turno')->paginate(20);
 
         return Inertia::render('Horarios/Index', [
             'horarios' => $horarios,
@@ -22,7 +24,7 @@ class HorarioController extends Controller
 
     public function create(): Response
     {
-        $users = User::orderBy('name')->get(['id', 'name']);
+        $users = User::with('perfil')->get();
 
         return Inertia::render('Horarios/Create', [
             'users' => $users,
@@ -38,7 +40,14 @@ class HorarioController extends Controller
             'estado'       => 'required|in:pendiente,confirmado,cancelado',
         ]);
 
-        Horario::create($request->only('user_id', 'inicio_turno', 'fin_turno', 'estado'));
+        $horario = Horario::create($request->only('user_id', 'inicio_turno', 'fin_turno', 'estado'));
+
+        try {
+            $usuario = User::find($request->user_id);
+            Mail::to($usuario->email)->send(new HorarioAsignado($usuario, $horario, 'asignado'));
+        } catch (\Exception $e) {
+            \Log::error("Email horario fallido para user {$request->user_id}: " . $e->getMessage());
+        }
 
         return redirect()->route('horarios.index')
             ->with('success', 'Horario creado correctamente.');
@@ -46,10 +55,10 @@ class HorarioController extends Controller
 
     public function edit(Horario $horario): Response
     {
-        $users = User::orderBy('name')->get(['id', 'name']);
+        $users = User::with('perfil')->get();
 
         return Inertia::render('Horarios/Edit', [
-            'horario' => $horario,
+            'horario' => $horario->load('user'),
             'users'   => $users,
         ]);
     }
@@ -64,6 +73,13 @@ class HorarioController extends Controller
         ]);
 
         $horario->update($request->only('user_id', 'inicio_turno', 'fin_turno', 'estado'));
+
+        try {
+            $usuario = User::find($request->user_id);
+            Mail::to($usuario->email)->send(new HorarioAsignado($usuario, $horario, 'actualizado'));
+        } catch (\Exception $e) {
+            \Log::error("Email horario actualizado fallido para user {$request->user_id}: " . $e->getMessage());
+        }
 
         return redirect()->route('horarios.index')
             ->with('success', 'Horario actualizado correctamente.');

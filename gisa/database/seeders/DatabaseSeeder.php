@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-                    IngredienteSeeder::class, // Primero los ingredientes
-                    ProductoSeeder::class,    // Luego los productos (que dependen de los ingredientes)
+                    IngredienteSeeder::class, 
+                    /*ProductoSeeder::class,    */
                 ]);
         }
 }

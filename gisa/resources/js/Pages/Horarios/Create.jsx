@@ -12,6 +12,9 @@ export default function Create({ auth, users }) {
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(false);
 
+    // 1. Nuevo estado para el buscador
+    const [busqueda, setBusqueda] = useState('');
+
     function addTurno() {
         setTurnos(prev => [...prev, turnoVacio()]);
     }
@@ -24,38 +27,18 @@ export default function Create({ auth, users }) {
         setTurnos(prev => prev.map((t, idx) => idx === i ? { ...t, [campo]: valor } : t));
     }
 
-    function submit(e) {
-        e.preventDefault();
-        setProcessing(true);
-        setErrors({});
+    // 2. Filtrar los usuarios en tiempo real
+    const usuariosFiltrados = users.filter(u => {
+        const dni = u.perfil?.dni?.toLowerCase() || '';
+        const nombreCompleto = u.perfil
+            ? `${u.perfil.nombre} ${u.perfil.apellido1}`.toLowerCase()
+            : u.name.toLowerCase();
 
-        // Enviamos cada turno como una petición independiente
-        const promesas = turnos.map(t =>
-            fetch(route('horarios.store'), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'X-Inertia': 'true',
-                    'X-Inertia-Version': document.querySelector('meta[name="inertia-version"]')?.content ?? '',
-                    'Accept': 'text/html, application/xhtml+xml',
-                },
-                body: JSON.stringify({
-                    user_id: userId,
-                    inicio_turno: t.inicio_turno,
-                    fin_turno: t.fin_turno,
-                    estado,
-                }),
-            })
-        );
+        const termino = busqueda.toLowerCase();
 
-        Promise.all(promesas)
-            .then(() => router.visit(route('horarios.index')))
-            .catch(() => setProcessing(false));
-    }
+        return dni.includes(termino) || nombreCompleto.includes(termino);
+    });
 
-    // Alternativa más sencilla: usar useForm de Inertia por cada turno
-    // y enviarlos con router.post
     function submitSimple(e) {
         e.preventDefault();
         setProcessing(true);
@@ -108,7 +91,15 @@ export default function Create({ auth, users }) {
                                 Datos generales
                             </h2>
 
-                            <Campo label="Empleado" error={errors.user_id}>
+                            {/* 3. Adaptación del campo con buscador e input */}
+                            <Campo label="Buscar y Seleccionar Empleado" error={errors.user_id}>
+                                <input
+                                    type="text"
+                                    placeholder="Buscar por DNI o nombre..."
+                                    value={busqueda}
+                                    onChange={e => setBusqueda(e.target.value)}
+                                    className="w-full border rounded px-3 py-2 text-sm mb-2"
+                                />
                                 <select
                                     value={userId}
                                     onChange={e => setUserId(e.target.value)}
@@ -116,10 +107,18 @@ export default function Create({ auth, users }) {
                                     required
                                 >
                                     <option value="">Seleccionar empleado...</option>
-                                    {users.map(u => (
-                                        <option key={u.id} value={u.id}>{u.name}</option>
+                                    {usuariosFiltrados.map(u => (
+                                        <option key={u.id} value={u.id}>
+                                            {u.perfil
+                                                ? `${u.perfil.dni} - ${u.perfil.nombre} ${u.perfil.apellido1}`
+                                                : u.name
+                                            }
+                                        </option>
                                     ))}
                                 </select>
+                                {usuariosFiltrados.length === 0 && (
+                                    <p className="text-xs text-gray-500 mt-1">No se encontraron resultados.</p>
+                                )}
                             </Campo>
 
                             <Campo label="Estado" error={errors.estado}>

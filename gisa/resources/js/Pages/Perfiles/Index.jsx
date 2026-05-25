@@ -15,7 +15,8 @@ export default function Index({ auth, perfiles }) {
             <Head title="Perfiles" />
 
             <div className="py-8">
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* 1. Cambiamos max-w-5xl por max-w-7xl para darle más ancho a la pantalla */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-semibold text-gray-800">Perfiles</h1>
                         <Link href={route('perfiles.create')}
@@ -26,40 +27,48 @@ export default function Index({ auth, perfiles }) {
 
                     <div className="bg-white shadow rounded-lg overflow-hidden">
                         <div className="overflow-x-auto">
-                            <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
+                            {/* 2. Quitamos el minWidth forzado en línea */}
+                            <table className="w-full border-collapse">
                                 <thead className="bg-gray-50 text-left text-sm text-gray-600">
+                                    {/* 3. Quitamos los anchos fijos (w-48, etc.) para que el navegador los calcule bien */}
                                     <tr>
-                                        <th className="p-4 w-48">Nombre completo</th>
-                                        <th className="p-4 w-28">DNI</th>
-                                        <th className="p-4 w-28">Teléfono</th>
-                                        <th className="p-4 w-32">Localidad</th>
-                                        <th className="p-4 w-32">Usuario</th>
-                                        <th className="p-4 w-32">Acciones</th>
+                                        <th className="p-4">Nombre completo</th>
+                                        <th className="p-4">DNI</th>
+                                        <th className="p-4">Teléfono</th>
+                                        <th className="p-4">Nº Seg. Social</th>
+                                        <th className="p-4">Cuenta Bancaria</th>
+                                        <th className="p-4">Email</th>
+                                        <th className="p-4 text-right">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="text-sm">
                                     {perfiles.data.map((perfil) => (
                                         <tr key={perfil.id} className="border-t hover:bg-gray-50">
-                                            <td className="p-4 w-48 max-w-[12rem] truncate">
+                                            {/* 4. Quitamos todos los 'truncate' y 'max-w'. 
+                                                Usamos 'whitespace-nowrap' en números para que no se partan a la mitad */}
+                                            <td className="p-4 font-medium text-gray-900">
                                                 {perfil.nombre} {perfil.apellido1} {perfil.apellido2}
                                             </td>
-                                            <td className="p-4 w-28 max-w-[7rem] truncate text-gray-500">
+                                            <td className="p-4 whitespace-nowrap text-gray-500">
                                                 {perfil.dni}
                                             </td>
-                                            <td className="p-4 w-28 max-w-[7rem] truncate">
+                                            <td className="p-4 whitespace-nowrap">
                                                 {perfil.telefono}
                                             </td>
-                                            <td className="p-4 w-32 max-w-[8rem] truncate">
-                                                {perfil.localidad}
+                                            <td className="p-4 whitespace-nowrap">
+                                                {perfil.num_seguridad_social}
                                             </td>
-                                            <td className="p-4 w-32 max-w-[8rem] truncate">
-                                                {perfil.user?.name}
+                                            <td className="p-4 whitespace-nowrap">
+                                                {perfil.cuenta_bancaria}
                                             </td>
-                                            <td className="p-4 w-32">
-                                                <div className="flex gap-3">
-                                                    <Link href={route('perfiles.show', perfil.id)} className="text-gray-500 hover:underline text-sm">Ver</Link>
-                                                    <Link href={route('perfiles.edit', perfil.id)} className="text-blue-600 hover:underline text-sm">Editar</Link>
-                                                    <button onClick={() => eliminar(perfil.id)} className="text-red-600 hover:underline text-sm">Eliminar</button>
+                                            <td className="p-4 text-gray-500">
+                                                {perfil.user?.email}
+                                            </td>
+                                            <td className="p-4 text-right whitespace-nowrap">
+                                                <div className="flex justify-end gap-3">
+                                                    <Link href={route('perfiles.show', perfil.id)} className="text-gray-500 hover:text-gray-700 hover:underline">Ver</Link>
+                                                    <Link href={route('perfiles.edit', perfil.id)} className="text-blue-600 hover:text-blue-800 hover:underline">Editar</Link>
+                                                    <button onClick={() => eliminar(perfil.id)} className="text-red-600 hover:text-red-800 hover:underline">Eliminar</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -69,6 +78,7 @@ export default function Index({ auth, perfiles }) {
                         </div>
                     </div>
 
+                    {/* Paginación */}
                     <div className="mt-4 flex gap-2">
                         {perfiles.links.map((link, i) => (
                             <Link key={i} href={link.url ?? '#'}
