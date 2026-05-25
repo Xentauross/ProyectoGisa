@@ -48,7 +48,12 @@ export default function Index({ auth, horarios }) {
                                 <tbody>
                                     {horarios.data.map((horario) => (
                                         <tr key={horario.id} className="border-t hover:bg-gray-50">
-                                            <td className="p-4 font-medium">{horario.user?.name}</td>
+                                            <td className="p-4 font-medium">
+                                                {horario.user?.perfil
+                                                    ? `${horario.user.perfil.dni} - ${horario.user.perfil.nombre} ${horario.user.perfil.apellido1}`
+                                                    : horario.user?.name
+                                                }
+                                            </td>
                                             <td className="p-4 text-sm text-gray-600">
                                                 {new Date(horario.inicio_turno).toLocaleString('es-ES', {
                                                     day: '2-digit', month: '2-digit', year: 'numeric',

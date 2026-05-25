@@ -1,12 +1,14 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-export default function Edit({ auth, perfil, users }) {
-    const esAdmin = ['admin', 'gerente'].includes(auth.user.role);
-    const esPropio = perfil.user_id === auth.user.id;
+export default function Edit({ auth, usuario, roles }) {
+    const perfil = usuario.perfil ?? {};
 
-    const { data, setData, patch, processing, errors } = useForm({
-        user_id: perfil.user_id,
+    const { data, setData, put, processing, errors } = useForm({
+        // Cuenta
+        email: usuario.email ?? '',
+        role: usuario.role ?? '',
+        // Perfil
         nombre: perfil.nombre ?? '',
         apellido1: perfil.apellido1 ?? '',
         apellido2: perfil.apellido2 ?? '',
@@ -20,57 +22,64 @@ export default function Edit({ auth, perfil, users }) {
 
     function submit(e) {
         e.preventDefault();
-        patch(route('perfiles.update', perfil.id));
+        put(route('usuarios.update', usuario.id));
     }
-
-    // Enlace "volver" según rol
-    const volverHref = esAdmin
-        ? route('perfiles.index')
-        : route('dashboard');
 
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Editar perfil</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Editar usuario</h2>}
         >
-            <Head title="Editar perfil" />
+            <Head title={`Editar — ${usuario.name}`} />
 
             <div className="py-8">
                 <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
 
                     <div className="flex justify-between items-center mb-6">
-                        <h1 className="text-2xl font-semibold text-gray-800">Editar perfil</h1>
-                        <Link href={volverHref} className="text-gray-500 hover:underline text-sm">
+                        <div>
+                            <h1 className="text-2xl font-semibold text-gray-800">Editar usuario</h1>
+                            <p className="text-sm text-gray-500 font-mono mt-0.5">{usuario.name}</p>
+                        </div>
+                        <Link href={route('usuarios.show', usuario.id)} className="text-gray-500 hover:underline text-sm">
                             ← Volver
                         </Link>
                     </div>
 
-                    <div className="bg-white shadow rounded-lg p-6">
-                        <form onSubmit={submit} className="space-y-5">
+                    <form onSubmit={submit} className="space-y-5">
 
-                            {/* Selector de usuario: solo admin/gerente lo ve y puede cambiarlo */}
-                            {esAdmin ? (
-                                <Campo label="Usuario" error={errors.user_id}>
-                                    <select
-                                        value={data.user_id}
-                                        onChange={e => setData('user_id', e.target.value)}
-                                        className="w-full border rounded px-3 py-2 text-sm"
-                                    >
-                                        {users.map(u => (
-                                            <option key={u.id} value={u.id}>{u.name}</option>
-                                        ))}
-                                    </select>
-                                </Campo>
-                            ) : (
-                                // El empleado ve su usuario fijo, no puede cambiarlo
-                                <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
-                                    <div>
-                                        <p className="text-xs text-gray-400 uppercase tracking-wide mb-0.5">Usuario</p>
-                                        <p className="text-sm font-semibold text-gray-800 font-mono">{auth.user.name}</p>
-                                    </div>
-                                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">No editable</span>
-                                </div>
-                            )}
+                        {/* Cuenta */}
+                        <div className="bg-white shadow rounded-lg p-6 space-y-4">
+                            <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+                                Cuenta de acceso
+                            </h2>
+
+                            <Campo label="Email" error={errors.email}>
+                                <input
+                                    type="email" value={data.email} maxLength={100}
+                                    onChange={e => setData('email', e.target.value)}
+                                    className="w-full border rounded px-3 py-2 text-sm"
+                                />
+                            </Campo>
+
+                            <Campo label="Rol" error={errors.role}>
+                                <select
+                                    value={data.role}
+                                    onChange={e => setData('role', e.target.value)}
+                                    className="w-full border rounded px-3 py-2 text-sm"
+                                >
+                                    <option value="">Seleccionar rol...</option>
+                                    {Object.entries(roles).map(([valor, etiqueta]) => (
+                                        <option key={valor} value={valor}>{etiqueta}</option>
+                                    ))}
+                                </select>
+                            </Campo>
+                        </div>
+
+                        {/* Datos personales */}
+                        <div className="bg-white shadow rounded-lg p-6 space-y-4">
+                            <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+                                Datos personales
+                            </h2>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Campo label="Nombre" error={errors.nombre}>
@@ -129,15 +138,16 @@ export default function Edit({ auth, perfil, users }) {
                                         placeholder="ES00 0000 0000 0000 0000 0000" />
                                 </Campo>
                             </div>
+                        </div>
 
-                            <div className="flex justify-end pt-2">
-                                <button type="submit" disabled={processing}
-                                    className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50 text-sm font-medium">
-                                    {processing ? 'Guardando...' : 'Guardar cambios'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="w-full bg-blue-600 text-white py-2.5 rounded hover:bg-blue-700 disabled:opacity-50 text-sm font-medium"
+                        >
+                            {processing ? 'Guardando...' : 'Guardar cambios'}
+                        </button>
+                    </form>
                 </div>
             </div>
         </AuthenticatedLayout>

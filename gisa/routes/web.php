@@ -60,13 +60,25 @@ Route::middleware('auth')->group(function () {
 // -------------------------------------------------------
 Route::middleware(['auth', 'verified', 'role:admin,gerente'])->group(function () {
     Route::resource('usuarios', UsuarioController::class);
-    Route::resource('perfiles', PerfilController::class)->parameters(['perfiles' => 'perfil']);
     Route::resource('horarios', HorarioController::class);
     Route::resource('mesas',    MesaController::class);
     Route::resource('productos', ProductoController::class);
     Route::resource('ingredientes', IngredienteController::class)->except(['show']);
+    Route::resource('perfiles', PerfilController::class)->parameters(['perfiles' => 'perfil'])->except(['edit', 'update']);
 });
 
+Route::middleware(['auth', 'verified', 'role:aux_administrativo'])->group(function () {
+    Route::resource('perfiles', PerfilController::class)->parameters(['perfiles' => 'perfil'])->except(['create']);
+});
+
+
+// -------------------------------------------------------
+// Cualquier usuario autenticado: editar su propio perfil
+// -------------------------------------------------------
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('perfiles/{perfil}/edit',  [PerfilController::class, 'edit'])->name('perfiles.edit');
+    Route::patch('perfiles/{perfil}',     [PerfilController::class, 'update'])->name('perfiles.update');
+});
 // -------------------------------------------------------
 // Admin + Metre + Camarero: pedidos
 // -------------------------------------------------------
@@ -101,5 +113,11 @@ Route::patch('mis-turnos/{horario}', function (\Illuminate\Http\Request $request
 
 Route::get('/register',  fn() => redirect('/login'))->name('register');
 Route::post('/register', fn() => redirect('/login'));
+
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('/usuarios/crear', [
+        \App\Http\Controllers\Auth\RegisteredUserController::class, 'create'
+    ])->name('usuarios.crear');
+});
 
 require __DIR__.'/auth.php';

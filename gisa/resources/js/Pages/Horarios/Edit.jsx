@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { useState } from 'react'; // 1. Importar useState
 
 export default function Edit({ auth, horario, users }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -9,10 +10,25 @@ export default function Edit({ auth, horario, users }) {
         estado: horario.estado,
     });
 
+    // 2. Estado para almacenar lo que el usuario escribe en el buscador
+    const [busqueda, setBusqueda] = useState('');
+
     function submit(e) {
         e.preventDefault();
         put(route('horarios.update', horario.id));
     }
+
+    // 3. Filtrar los usuarios en base al DNI o el Nombre
+    const usuariosFiltrados = users.filter(u => {
+        const dni = u.perfil?.dni?.toLowerCase() || '';
+        const nombreCompleto = u.perfil
+            ? `${u.perfil.nombre} ${u.perfil.apellido1}`.toLowerCase()
+            : u.name.toLowerCase();
+
+        const termino = busqueda.toLowerCase();
+
+        return dni.includes(termino) || nombreCompleto.includes(termino);
+    });
 
     return (
         <AuthenticatedLayout
@@ -34,17 +50,35 @@ export default function Edit({ auth, horario, users }) {
                     <div className="bg-white shadow rounded-lg p-6">
                         <form onSubmit={submit} className="space-y-5">
 
-                            <Campo label="Empleado" error={errors.user_id}>
+                            <Campo label="Buscar y Seleccionar Empleado" error={errors.user_id}>
+                                {/* 4. Input buscador */}
+                                <input
+                                    type="text"
+                                    placeholder="Buscar por DNI o nombre..."
+                                    value={busqueda}
+                                    onChange={e => setBusqueda(e.target.value)}
+                                    className="w-full border rounded px-3 py-2 text-sm mb-2"
+                                />
+
+                                {/* 5. Select con los resultados ya filtrados */}
                                 <select
                                     value={data.user_id}
                                     onChange={e => setData('user_id', e.target.value)}
                                     className="w-full border rounded px-3 py-2 text-sm"
                                 >
-                                    <option value="">Seleccionar...</option>
-                                    {users.map(u => (
-                                        <option key={u.id} value={u.id}>{u.name}</option>
+                                    <option value="">Seleccionar empleado...</option>
+                                    {usuariosFiltrados.map(u => (
+                                        <option key={u.id} value={u.id}>
+                                            {u.perfil
+                                                ? `${u.perfil.dni} - ${u.perfil.nombre} ${u.perfil.apellido1}`
+                                                : u.name
+                                            }
+                                        </option>
                                     ))}
                                 </select>
+                                {usuariosFiltrados.length === 0 && (
+                                    <p className="text-xs text-gray-500 mt-1">No se encontraron resultados.</p>
+                                )}
                             </Campo>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

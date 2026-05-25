@@ -28,7 +28,11 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Dashboard
                                 </NavLink>
 
-                                <NavLink href={route('perfiles.index')} active={route().current('pedidos.*')}>
+                                <NavLink href={route('usuarios.index')} active={route().current('users.*')}>
+                                    Usuarios
+                                </NavLink>
+
+                                <NavLink href={route('perfiles.index')} active={route().current('perfiles.*')}>
                                     Perfiles
                                 </NavLink>
 

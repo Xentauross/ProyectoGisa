@@ -3,25 +3,26 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 // Genera el username igual que el backend para mostrarlo en tiempo real
 function generarUsername(nombre, apellido1, apellido2, dni) {
-    const p1 = (nombre?.[0]        ?? '').toUpperCase();
+    const p1 = (nombre?.[0] ?? '').toUpperCase();
     const p2 = (apellido1?.slice(0, 3) ?? '').toUpperCase();
     const p3 = (apellido2?.slice(0, 3) ?? '').toUpperCase();
-    const p4 = (dni?.slice(-3)         ?? '').toUpperCase();
+    const p4 = (dni?.slice(-3) ?? '').toUpperCase();
     return p1 + p2 + p3 + p4;
 }
 
 export default function Create({ auth, roles }) {
     const { data, setData, post, processing, errors } = useForm({
-        nombre:               '',
-        apellido1:            '',
-        apellido2:            '',
-        dni:                  '',
-        email:                '',
+        nombre: '',
+        apellido1: '',
+        apellido2: '',
+        dni: '',
+        email: '',
         num_seguridad_social: '',
-        telefono:             '',
-        fecha_nacimiento:     '',
-        localidad:            '',
-        role:                 '',
+        telefono: '',
+        fecha_nacimiento: '',
+        localidad: '',
+        cuenta_bancaria: '',
+        role: '',
     });
 
     const usernamePreview = generarUsername(data.nombre, data.apellido1, data.apellido2, data.dni);
@@ -110,6 +111,17 @@ export default function Create({ auth, roles }) {
                                     <input type="text" value={data.localidad} maxLength={100}
                                         onChange={e => setData('localidad', e.target.value)}
                                         className="w-full border rounded px-3 py-2 text-sm" />
+                                </Campo>
+
+                                <Campo label="Cuenta bancaria" error={errors.cuenta_bancaria}>
+                                    <input
+                                        type="text"
+                                        value={data.cuenta_bancaria}
+                                        maxLength={34}
+                                        onChange={e => setData('cuenta_bancaria', e.target.value)}
+                                        className="w-full border rounded px-3 py-2 text-sm"
+                                        placeholder="ES00 0000 0000 0000 0000 0000"
+                                    />
                                 </Campo>
                             </div>
                         </div>
