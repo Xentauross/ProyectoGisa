@@ -7,6 +7,8 @@ import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
+    const role = user.role;
+    const can = (roles) => roles.includes(role);
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -24,37 +26,53 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
-                                </NavLink>
+                                {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero', 'aux_administrativo']) && (
+                                    <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                        Dashboard
+                                    </NavLink>
+                                )}
 
-                                <NavLink href={route('usuarios.index')} active={route().current('users.*')}>
-                                    Usuarios
-                                </NavLink>
+                                {can(['admin', 'gerente']) && (
+                                    <NavLink href={route('usuarios.index')} active={route().current('users.*')}>
+                                        Usuarios
+                                    </NavLink>
+                                )}
 
-                                <NavLink href={route('perfiles.index')} active={route().current('perfiles.*')}>
-                                    Perfiles
-                                </NavLink>
+                                {can(['admin', 'gerente', 'aux_administrativo']) && (
+                                    <NavLink href={route('perfiles.index')} active={route().current('perfiles.*')}>
+                                        Empleados
+                                    </NavLink>
+                                )}
 
-                                <NavLink href={route('horarios.index')} active={route().current('horarios.*')}>
-                                    Horarios
-                                </NavLink>
+                                {can(['admin', 'gerente', 'metre']) && (
+                                    <NavLink href={route('horarios.index')} active={route().current('horarios.*')}>
+                                        Horarios
+                                    </NavLink>
+                                )}
 
-                                <NavLink href={route('pedidos.index')} active={route().current('pedidos.*')}>
-                                    Pedidos
-                                </NavLink>
+                                {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero']) && (
+                                    <NavLink href={route('pedidos.index')} active={route().current('pedidos.*')}>
+                                        Pedidos
+                                    </NavLink>
+                                )}
 
-                                <NavLink href={route('mesas.index')} active={route().current('mesas.*')}>
-                                    Mesas
-                                </NavLink>
+                                {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina']) && (
+                                    <NavLink href={route('mesas.index')} active={route().current('mesas.*')}>
+                                        Mesas
+                                    </NavLink>
+                                )}
 
-                                <NavLink href={route('productos.index')} active={route().current('productos.*')}>
-                                    Productos
-                                </NavLink>
+                                {can(['admin', 'gerente', 'jefe_cocina']) && (
+                                    <NavLink href={route('productos.index')} active={route().current('productos.*')}>
+                                        Productos
+                                    </NavLink>
+                                )}
 
-                                <NavLink href={route('ingredientes.index')} active={route().current('ingredientes.*')}>
-                                    Ingredientes
-                                </NavLink>
+                                {can(['admin', 'gerente', 'jefe_cocina', 'cocinero']) && (
+                                    <NavLink href={route('ingredientes.index')} active={route().current('ingredientes.*')}>
+                                        Ingredientes
+                                    </NavLink>
+                                )}
                             </div>
                         </div>
 
@@ -153,12 +171,77 @@ export default function AuthenticatedLayout({ header, children }) {
                     }
                 >
                     <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
+                        {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero', 'aux_administrativo']) && (
+                            <ResponsiveNavLink
+                                href={route('dashboard')}
+                                active={route().current('dashboard')}
+                            >
+                                Dashboard
+                            </ResponsiveNavLink>
+                        )}
+
+                        {can(['admin', 'gerente']) && (
+                            <ResponsiveNavLink
+                                href={route('usuarios.index')}
+                                active={route().current('users.*')}
+                            >
+                                Usuarios
+                            </ResponsiveNavLink>
+                        )}
+
+                        {can(['admin', 'gerente', 'aux_administrativo']) && (
+                            <ResponsiveNavLink
+                                href={route('perfiles.index')}
+                                active={route().current('perfiles.*')}
+                            >
+                                Empledados
+                            </ResponsiveNavLink>
+                        )}
+
+                        {can(['admin', 'gerente', 'metre']) && (
+                            <ResponsiveNavLink
+                                href={route('horarios.index')}
+                                active={route().current('horarios.*')}
+                            >
+                                Horarios
+                            </ResponsiveNavLink>
+                        )}
+
+                        {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero']) && (
+                            <ResponsiveNavLink
+                                href={route('pedidos.index')}
+                                active={route().current('pedidos.*')}
+                            >
+                                Pedidos
+                            </ResponsiveNavLink>
+                        )}
+
+                        {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina']) && (
+                            <ResponsiveNavLink
+                                href={route('mesas.index')}
+                                active={route().current('mesas.*')}
+                            >
+                                Mesas
+                            </ResponsiveNavLink>
+                        )}
+
+                        {can(['admin', 'gerente', 'metre']) && (
+                            <ResponsiveNavLink
+                                href={route('productos.index')}
+                                active={route().current('productos.*')}
+                            >
+                                Productos
+                            </ResponsiveNavLink>
+                        )}
+
+                        {can(['admin', 'gerente', 'metre']) && (
+                            <ResponsiveNavLink
+                                href={route('ingredientes.index')}
+                                active={route().current('ingredientes.*')}
+                            >
+                                Ingredientes
+                            </ResponsiveNavLink>
+                        )}
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4">

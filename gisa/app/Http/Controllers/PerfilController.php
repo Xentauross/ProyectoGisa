@@ -12,12 +12,21 @@ use Inertia\Response;
 
 class PerfilController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $perfiles = Perfil::with('user')->latest()->paginate(20);
-
+        $allowed = ['nombre', 'apellido1', 'dni', 'telefono', 'num_seguridad_social', 'cuenta_bancaria'];
+        $sort = in_array($request->sort, $allowed) ? $request->sort : 'nombre';
+        $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
+    
+        $perfiles = Perfil::with('user')
+            ->orderBy($sort, $dir)
+            ->paginate(20)
+            ->appends($request->only('sort', 'dir'));
+    
         return Inertia::render('Perfiles/Index', [
             'perfiles' => $perfiles,
+            'sort'     => $sort,
+            'dir'      => $dir,
         ]);
     }
 
@@ -85,7 +94,6 @@ class PerfilController extends Controller
         );
 
         $request->validate([
-            'user_id'              => ['required', 'integer', 'exists:users,id', Rule::unique('perfiles', 'user_id')->ignore($perfil->id)],
             'nombre'               => 'required|string|max:40',
             'apellido1'            => 'required|string|max:40',
             'apellido2'            => 'nullable|string|max:40',
@@ -97,7 +105,8 @@ class PerfilController extends Controller
             'cuenta_bancaria'      => ['required', 'string', 'max:34', Rule::unique('perfiles', 'cuenta_bancaria')->ignore($perfil->id)],
         ]);
 
-        $perfil->update($request->all());
+        // Usa only() sin user_id para que nunca se pueda cambiar
+        $perfil->update($request->except('user_id'));
 
         // Redirige según quién actualizó
         $destino = $perfil->user_id === auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente'])

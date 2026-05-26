@@ -16,15 +16,35 @@ use Inertia\Response;
 
 class UsuarioController extends Controller
 {
-    public function index(): Response
+public function index(Request $request): Response
     {
-        $usuarios = User::with('perfil')->latest()->paginate(20);
-
+        // Añadimos lista de columnas permitidas
+        $allowed = ['name', 'email', 'role', 'created_at', 'nombre'];
+        $sort = in_array($request->sort, $allowed) ? $request->sort : 'created_at';
+        $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
+    
+        // Preparamos la consulta base uniendo la tabla perfiles
+        $query = User::with('perfil')
+            ->leftJoin('perfiles', 'users.id', '=', 'perfiles.user_id')
+            ->select('users.*'); //Elegimos solo users.* para que el 'id' de perfil no machaque al 'id' de usuario
+    
+        // Aplicamos el orden dependiendo de si es un campo de perfil o de usuario
+        if ($sort === 'nombre') {
+            $query->orderBy('perfiles.nombre', $dir);
+        } else {
+            $query->orderBy("users.{$sort}", $dir);
+        }
+    
+        // Paginamos
+        $usuarios = $query->paginate(20)
+            ->appends($request->only('sort', 'dir'));
+    
         return Inertia::render('Usuarios/Index', [
             'usuarios' => $usuarios,
+            'sort'     => $sort,
+            'dir'      => $dir,
         ]);
     }
-
     public function create(): Response
     {
         return Inertia::render('Usuarios/Create', [
@@ -143,11 +163,11 @@ public function store(Request $request): RedirectResponse
 
     private static function generarUsername(string $nombre, string $apellido1, string $apellido2, string $dni): string
     {
-        // 1ª letra del nombre + 3 primeras del apellido1 + 3 primeras del apellido2 + 3 últimos del DNI
+        // 1ª letra del nombre + 3 primeras del apellido1 + 3 primeras del apellido2 + 3 últimos numeros del DNI
         $parte1 = Str::upper(Str::substr($nombre,    0, 1));
         $parte2 = Str::upper(Str::substr($apellido1, 0, 3));
         $parte3 = Str::upper(Str::substr($apellido2, 0, 3));
-        $parte4 = Str::upper(Str::substr($dni, 6,9));
+        $parte4 = Str::upper(Str::substr($dni, 5,8));
 
         $username = $parte1 . $parte2 . $parte3 . $parte4;
 

@@ -158,12 +158,9 @@ export default function Dashboard({ auth, miPerfil, misHorarios = [] }) {
                     <div className="card-bienvenida">
                         <div className="avatar">{iniciales}</div>
                         <div className="bienvenida-texto">
-                            <h3>Hola, {auth.user.name.split(' ')[0]}</h3>
+                            <h3>Hola, {miPerfil.nombre}</h3>
                             <p>{hoy.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
                         </div>
-                        {auth.user.role === 'admin' && (
-                            <Link href={route('usuarios.create')} className="btn-sm">Crear usuario</Link>
-                        )}
                         <span className="badge-rol">{auth.user.role ?? 'empleado'}</span>
                     </div>
 

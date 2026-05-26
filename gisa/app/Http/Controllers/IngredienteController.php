@@ -11,12 +11,21 @@ use Inertia\Response;
 
 class IngredienteController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $ingredientes = Ingrediente::withCount('productos')->orderBy('nombre')->paginate(20);
-
+        $allowed = ['nombre', 'productos_count'];
+        $sort = in_array($request->sort, $allowed) ? $request->sort : 'nombre';
+        $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
+    
+        $ingredientes = Ingrediente::withCount('productos')
+            ->orderBy($sort, $dir)
+            ->paginate(20)
+            ->appends($request->only('sort', 'dir'));
+    
         return Inertia::render('Ingredientes/Index', [
             'ingredientes' => $ingredientes,
+            'sort'         => $sort,
+            'dir'          => $dir,
         ]);
     }
 

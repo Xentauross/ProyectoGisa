@@ -23,8 +23,13 @@ export default function Show({ auth, perfil }) {
                         <Fila label="DNI" valor={perfil.dni} />
                         <Fila label="Nº Seguridad Social" valor={perfil.num_seguridad_social} />
                         <Fila label="Teléfono" valor={perfil.telefono} />
-                        <Fila label="Fecha de nacimiento" valor={perfil.fecha_nacimiento} />
+                        <Fila label="Fecha de nacimiento" valor={
+                            perfil.fecha_nacimiento
+                                ? new Date(perfil.fecha_nacimiento).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                                : null
+                        } />
                         <Fila label="Localidad" valor={perfil.localidad} />
+                        <Fila label="Cuenta bancaria" valor={perfil.cuenta_bancaria} />
                     </div>
 
                     <div className="mt-4">

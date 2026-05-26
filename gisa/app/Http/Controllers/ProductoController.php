@@ -11,12 +11,21 @@ use Inertia\Response;
 
 class ProductoController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $productos = Producto::with('ingredientes')->latest()->paginate(15);
-
+        $allowed = ['nombre', 'tipo', 'precio', 'es_recomendado'];
+        $sort = in_array($request->sort, $allowed) ? $request->sort : 'nombre';
+        $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
+    
+        $productos = Producto::with('ingredientes')
+            ->orderBy($sort, $dir)
+            ->paginate(15)
+            ->appends($request->only('sort', 'dir'));
+    
         return Inertia::render('Productos/Index', [
             'productos' => $productos,
+            'sort'      => $sort,
+            'dir'       => $dir,
         ]);
     }
     public function show(Producto $producto): Response
