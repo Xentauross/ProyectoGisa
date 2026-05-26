@@ -1,40 +1,40 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import SortableHeader from '@/Components/SortableHeader';
 
-export default function Index({ auth, productos }) {
+export default function Index({ auth, productos, sort, dir }) {
     function eliminar(id) {
         if (!confirm('¿Eliminar este producto?')) return;
         router.delete(route('productos.destroy', id));
     }
 
-    return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Productos</h2>}
-        >
-            <Head title="Productos" />
+    const sh = (field, label) => (
+        <SortableHeader field={field} currentSort={sort} currentDir={dir} routeName="productos.index">
+            {label}
+        </SortableHeader>
+    );
 
+    return (
+        <AuthenticatedLayout user={auth.user}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Productos</h2>}>
+            <Head title="Productos" />
             <div className="py-8">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-semibold text-gray-800">Productos</h1>
-                        <Link
-                            href={route('productos.create')}
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                        >
+                        <Link href={route('productos.create')}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                             Nuevo producto
                         </Link>
                     </div>
-
                     <div className="bg-white shadow rounded-lg overflow-hidden">
                         <table className="w-full border-collapse">
                             <thead className="bg-gray-50 text-left text-sm text-gray-600">
                                 <tr>
-                                    <th className="p-4">Nombre</th>
-                                    <th className="p-4">Tipo</th>
-                                    <th className="p-4">Precio</th>
-                                    <th className="p-4">Recomendado</th>
+                                    {sh('nombre', 'Nombre')}
+                                    {sh('tipo', 'Tipo')}
+                                    {sh('precio', 'Precio')}
+                                    {sh('es_recomendado', 'Recomendado')}
                                     <th className="p-4">Acciones</th>
                                 </tr>
                             </thead>
@@ -55,15 +55,11 @@ export default function Index({ auth, productos }) {
                             </tbody>
                         </table>
                     </div>
-
                     <div className="mt-4 flex gap-2">
                         {productos.links.map((link, i) => (
-                            <Link
-                                key={i}
-                                href={link.url ?? '#'}
+                            <Link key={i} href={link.url ?? '#'}
                                 className={`px-3 py-1 rounded border text-sm ${link.active ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'} ${!link.url ? 'opacity-40 pointer-events-none' : ''}`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                            />
+                                dangerouslySetInnerHTML={{ __html: link.label }} />
                         ))}
                     </div>
                 </div>

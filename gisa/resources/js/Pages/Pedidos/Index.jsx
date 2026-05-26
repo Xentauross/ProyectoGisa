@@ -1,29 +1,32 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import SortableHeader from '@/Components/SortableHeader';
 
 const colores = {
     pendiente: 'bg-yellow-100 text-yellow-700',
-    listo:     'bg-blue-100 text-blue-700',
-    servido:   'bg-green-100 text-green-700',
-    pagado:    'bg-gray-100 text-gray-600',
+    listo: 'bg-blue-100 text-blue-700',
+    servido: 'bg-green-100 text-green-700',
+    pagado: 'bg-gray-100 text-gray-600',
 };
 
-export default function Index({ auth, pedidos }) {
+export default function Index({ auth, pedidos, sort, dir }) {
     function eliminar(id) {
         if (!confirm('¿Eliminar este pedido?')) return;
         router.delete(route('pedidos.destroy', id));
     }
 
-    return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Pedidos</h2>}
-        >
-            <Head title="Pedidos" />
+    const sh = (field, label) => (
+        <SortableHeader field={field} currentSort={sort} currentDir={dir} routeName="pedidos.index">
+            {label}
+        </SortableHeader>
+    );
 
+    return (
+        <AuthenticatedLayout user={auth.user}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Pedidos</h2>}>
+            <Head title="Pedidos" />
             <div className="py-8">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-semibold text-gray-800">Pedidos</h1>
                         <Link href={route('pedidos.create')}
@@ -31,16 +34,15 @@ export default function Index({ auth, pedidos }) {
                             Nuevo pedido
                         </Link>
                     </div>
-
                     <div className="bg-white shadow rounded-lg overflow-hidden">
                         <table className="w-full border-collapse">
                             <thead className="bg-gray-50 text-left text-sm text-gray-600">
                                 <tr>
-                                    <th className="p-4">#</th>
-                                    <th className="p-4">Mesa</th>
-                                    <th className="p-4">Camarero</th>
-                                    <th className="p-4">Estado</th>
-                                    <th className="p-4">Total</th>
+                                    {sh('id', '#')}
+                                    {sh('mesa_id', 'Mesa')}
+                                    {sh('camarero_id', 'Camarero')}
+                                    {sh('estado', 'Estado')}
+                                    {sh('precio_total', 'Total')}
                                     <th className="p-4">Acciones</th>
                                 </tr>
                             </thead>
@@ -65,7 +67,6 @@ export default function Index({ auth, pedidos }) {
                             </tbody>
                         </table>
                     </div>
-
                     <div className="mt-4 flex gap-2">
                         {pedidos.links.map((link, i) => (
                             <Link key={i} href={link.url ?? '#'}

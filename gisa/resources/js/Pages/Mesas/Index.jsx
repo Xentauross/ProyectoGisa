@@ -1,22 +1,25 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import SortableHeader from '@/Components/SortableHeader';
 
-export default function Index({ auth, mesas }) {
+export default function Index({ auth, mesas, sort, dir }) {
     function eliminar(id) {
         if (!confirm('¿Eliminar esta mesa?')) return;
         router.delete(route('mesas.destroy', id));
     }
 
-    return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Mesas</h2>}
-        >
-            <Head title="Mesas" />
+    const sh = (field, label) => (
+        <SortableHeader field={field} currentSort={sort} currentDir={dir} routeName="mesas.index">
+            {label}
+        </SortableHeader>
+    );
 
+    return (
+        <AuthenticatedLayout user={auth.user}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Mesas</h2>}>
+            <Head title="Mesas" />
             <div className="py-8">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-semibold text-gray-800">Mesas</h1>
                         <Link href={route('mesas.create')}
@@ -24,13 +27,12 @@ export default function Index({ auth, mesas }) {
                             Nueva mesa
                         </Link>
                     </div>
-
                     <div className="bg-white shadow rounded-lg overflow-hidden">
                         <table className="w-full border-collapse">
                             <thead className="bg-gray-50 text-left text-sm text-gray-600">
                                 <tr>
-                                    <th className="p-4">Número</th>
-                                    <th className="p-4">Estado</th>
+                                    {sh('numero', 'Número')}
+                                    {sh('estado', 'Estado')}
                                     <th className="p-4">Acciones</th>
                                 </tr>
                             </thead>
@@ -39,11 +41,7 @@ export default function Index({ auth, mesas }) {
                                     <tr key={mesa.id} className="border-t hover:bg-gray-50">
                                         <td className="p-4">Mesa {mesa.numero}</td>
                                         <td className="p-4">
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                mesa.estado === 'libre'
-                                                    ? 'bg-green-100 text-green-700'
-                                                    : 'bg-red-100 text-red-700'
-                                            }`}>
+                                            <span className={`px-2 py-1 rounded text-xs font-medium ${mesa.estado === 'libre' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                                 {mesa.estado}
                                             </span>
                                         </td>
@@ -56,7 +54,6 @@ export default function Index({ auth, mesas }) {
                             </tbody>
                         </table>
                     </div>
-
                     <div className="mt-4 flex gap-2">
                         {mesas.links.map((link, i) => (
                             <Link key={i} href={link.url ?? '#'}

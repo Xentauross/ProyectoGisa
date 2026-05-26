@@ -13,12 +13,21 @@ use Inertia\Response;
 
 class PedidoController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $pedidos = Pedido::with('mesa', 'camarero')->latest()->paginate(20);
-
+        $allowed = ['id', 'mesa_id', 'camarero_id', 'estado', 'precio_total'];
+        $sort = in_array($request->sort, $allowed) ? $request->sort : 'id';
+        $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
+    
+        $pedidos = Pedido::with('mesa', 'camarero')
+            ->orderBy($sort, $dir)
+            ->paginate(20)
+            ->appends($request->only('sort', 'dir'));
+    
         return Inertia::render('Pedidos/Index', [
             'pedidos' => $pedidos,
+            'sort'    => $sort,
+            'dir'     => $dir,
         ]);
     }
 

@@ -13,12 +13,21 @@ use Illuminate\Support\Facades\Mail;
 
 class HorarioController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $horarios = Horario::with('user.perfil')->latest('inicio_turno')->paginate(20);
-
+        $allowed = ['inicio_turno', 'fin_turno', 'estado'];
+        $sort = in_array($request->sort, $allowed) ? $request->sort : 'inicio_turno';
+        $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
+    
+        $horarios = Horario::with('user.perfil')
+            ->orderBy($sort, $dir)
+            ->paginate(20)
+            ->appends($request->only('sort', 'dir'));
+    
         return Inertia::render('Horarios/Index', [
             'horarios' => $horarios,
+            'sort'     => $sort,
+            'dir'      => $dir,
         ]);
     }
 

@@ -174,7 +174,7 @@
         </div>
 
         <div class="body">
-            <p class="saludo">Bienvenido/a, {{ $usuario->name }} 👋</p>
+            <p class="saludo">Bienvenido/a, <strong>{{ $usuario->name }}</strong> 👋</p>
 
             <p class="texto">
                 Tu cuenta en el sistema de gestión de <strong>Gisa Restaurante</strong> ha sido creada.

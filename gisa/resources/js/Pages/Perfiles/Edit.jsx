@@ -6,7 +6,6 @@ export default function Edit({ auth, perfil, users }) {
     const esPropio = perfil.user_id === auth.user.id;
 
     const { data, setData, patch, processing, errors } = useForm({
-        user_id: perfil.user_id,
         nombre: perfil.nombre ?? '',
         apellido1: perfil.apellido1 ?? '',
         apellido2: perfil.apellido2 ?? '',
@@ -48,29 +47,13 @@ export default function Edit({ auth, perfil, users }) {
                     <div className="bg-white shadow rounded-lg p-6">
                         <form onSubmit={submit} className="space-y-5">
 
-                            {/* Selector de usuario: solo admin/gerente lo ve y puede cambiarlo */}
-                            {esAdmin ? (
-                                <Campo label="Usuario" error={errors.user_id}>
-                                    <select
-                                        value={data.user_id}
-                                        onChange={e => setData('user_id', e.target.value)}
-                                        className="w-full border rounded px-3 py-2 text-sm"
-                                    >
-                                        {users.map(u => (
-                                            <option key={u.id} value={u.id}>{u.name}</option>
-                                        ))}
-                                    </select>
-                                </Campo>
-                            ) : (
-                                // El empleado ve su usuario fijo, no puede cambiarlo
-                                <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
-                                    <div>
-                                        <p className="text-xs text-gray-400 uppercase tracking-wide mb-0.5">Usuario</p>
-                                        <p className="text-sm font-semibold text-gray-800 font-mono">{auth.user.name}</p>
-                                    </div>
-                                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">No editable</span>
+                            {/* Usuario siempre fijo, no editable */}
+                            <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+                                <div>
+                                    <p className="text-xs text-gray-400 uppercase tracking-wide mb-0.5">Usuario</p>
+                                    <p className="text-sm font-semibold text-gray-800">{perfil.user?.name}</p>
                                 </div>
-                            )}
+                            </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Campo label="Nombre" error={errors.nombre}>

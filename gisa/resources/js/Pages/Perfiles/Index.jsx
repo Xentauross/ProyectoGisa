@@ -1,42 +1,38 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import SortableHeader from '@/Components/SortableHeader';
 
-export default function Index({ auth, perfiles }) {
+export default function Index({ auth, perfiles, sort, dir }) {
     function eliminar(id) {
         if (!confirm('¿Eliminar este perfil?')) return;
         router.delete(route('perfiles.destroy', id));
     }
 
-    return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Perfiles</h2>}
-        >
-            <Head title="Perfiles" />
+    const sh = (field, label) => (
+        <SortableHeader field={field} currentSort={sort} currentDir={dir} routeName="perfiles.index">
+            {label}
+        </SortableHeader>
+    );
 
+    return (
+        <AuthenticatedLayout user={auth.user}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Empleados</h2>}>
+            <Head title="Empleados" />
             <div className="py-8">
-                {/* 1. Cambiamos max-w-5xl por max-w-7xl para darle más ancho a la pantalla */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center mb-6">
-                        <h1 className="text-2xl font-semibold text-gray-800">Perfiles</h1>
-                        <Link href={route('perfiles.create')}
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
-                            Nuevo perfil
-                        </Link>
+                        <h1 className="text-2xl font-semibold text-gray-800">Empleados</h1>
                     </div>
-
                     <div className="bg-white shadow rounded-lg overflow-hidden">
                         <div className="overflow-x-auto">
-                            {/* 2. Quitamos el minWidth forzado en línea */}
                             <table className="w-full border-collapse">
                                 <thead className="bg-gray-50 text-left text-sm text-gray-600">
-                                    {/* 3. Quitamos los anchos fijos (w-48, etc.) para que el navegador los calcule bien */}
                                     <tr>
-                                        <th className="p-4">Nombre completo</th>
-                                        <th className="p-4">DNI</th>
-                                        <th className="p-4">Teléfono</th>
-                                        <th className="p-4">Nº Seg. Social</th>
-                                        <th className="p-4">Cuenta Bancaria</th>
+                                        {sh('nombre', 'Nombre completo')}
+                                        {sh('dni', 'DNI')}
+                                        {sh('telefono', 'Teléfono')}
+                                        {sh('num_seguridad_social', 'Nº Seg. Social')}
+                                        {sh('cuenta_bancaria', 'Cuenta Bancaria')}
                                         <th className="p-4">Email</th>
                                         <th className="p-4 text-right">Acciones</th>
                                     </tr>
@@ -44,31 +40,19 @@ export default function Index({ auth, perfiles }) {
                                 <tbody className="text-sm">
                                     {perfiles.data.map((perfil) => (
                                         <tr key={perfil.id} className="border-t hover:bg-gray-50">
-                                            {/* 4. Quitamos todos los 'truncate' y 'max-w'. 
-                                                Usamos 'whitespace-nowrap' en números para que no se partan a la mitad */}
                                             <td className="p-4 font-medium text-gray-900">
                                                 {perfil.nombre} {perfil.apellido1} {perfil.apellido2}
                                             </td>
-                                            <td className="p-4 whitespace-nowrap text-gray-500">
-                                                {perfil.dni}
-                                            </td>
-                                            <td className="p-4 whitespace-nowrap">
-                                                {perfil.telefono}
-                                            </td>
-                                            <td className="p-4 whitespace-nowrap">
-                                                {perfil.num_seguridad_social}
-                                            </td>
-                                            <td className="p-4 whitespace-nowrap">
-                                                {perfil.cuenta_bancaria}
-                                            </td>
-                                            <td className="p-4 text-gray-500">
-                                                {perfil.user?.email}
-                                            </td>
+                                            <td className="p-4 whitespace-nowrap text-gray-500">{perfil.dni}</td>
+                                            <td className="p-4 whitespace-nowrap">{perfil.telefono}</td>
+                                            <td className="p-4 whitespace-nowrap">{perfil.num_seguridad_social}</td>
+                                            <td className="p-4 whitespace-nowrap">{perfil.cuenta_bancaria}</td>
+                                            <td className="p-4 text-gray-500">{perfil.user?.email}</td>
                                             <td className="p-4 text-right whitespace-nowrap">
                                                 <div className="flex justify-end gap-3">
-                                                    <Link href={route('perfiles.show', perfil.id)} className="text-gray-500 hover:text-gray-700 hover:underline">Ver</Link>
-                                                    <Link href={route('perfiles.edit', perfil.id)} className="text-blue-600 hover:text-blue-800 hover:underline">Editar</Link>
-                                                    <button onClick={() => eliminar(perfil.id)} className="text-red-600 hover:text-red-800 hover:underline">Eliminar</button>
+                                                    <Link href={route('perfiles.show', perfil.id)} className="text-gray-500 hover:underline">Ver</Link>
+                                                    <Link href={route('perfiles.edit', perfil.id)} className="text-blue-600 hover:underline">Editar</Link>
+                                                    <button onClick={() => eliminar(perfil.id)} className="text-red-600 hover:underline">Eliminar</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -77,8 +61,6 @@ export default function Index({ auth, perfiles }) {
                             </table>
                         </div>
                     </div>
-
-                    {/* Paginación */}
                     <div className="mt-4 flex gap-2">
                         {perfiles.links.map((link, i) => (
                             <Link key={i} href={link.url ?? '#'}

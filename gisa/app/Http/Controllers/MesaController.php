@@ -10,15 +10,23 @@ use Inertia\Response;
 
 class MesaController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $mesas = Mesa::orderBy('numero')->paginate(20);
-
+        $allowed = ['numero', 'estado'];
+        $sort = in_array($request->sort, $allowed) ? $request->sort : 'numero';
+        $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
+    
+        $mesas = Mesa::orderBy($sort, $dir)
+            ->paginate(20)
+            ->appends($request->only('sort', 'dir'));
+    
         return Inertia::render('Mesas/Index', [
             'mesas' => $mesas,
+            'sort'  => $sort,
+            'dir'   => $dir,
         ]);
     }
-
+    
     public function create(): Response
     {
         return Inertia::render('Mesas/Create');
