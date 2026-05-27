@@ -1,0 +1,406 @@
+/*
+ * homeTab.css — usa variables CSS para light/dark mode automático
+ */
+
+.ht-root {
+    padding: 0 0 3rem;
+}
+
+/* Hero */
+.ht-kicker {
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--color-text-tertiary);
+    margin: 0 0 6px;
+}
+
+.ht-nombre {
+    font-family: 'Instrument Serif', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--color-text-primary);
+    margin: 0 0 10px;
+    line-height: 1.15;
+}
+
+.ht-slogan {
+    font-size: .88rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin: 0 0 1.25rem;
+    max-width: 520px;
+}
+
+.ht-hero {
+    margin-bottom: 1.75rem;
+}
+
+.ht-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ht-pill {
+    font-size: .72rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border-secondary);
+    color: var(--color-text-secondary);
+    background: var(--color-background-secondary);
+}
+
+/* Info rápida */
+.ht-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 1.75rem;
+}
+
+.ht-info-card {
+    background: var(--color-background-secondary);
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+
+.ht-info-icon {
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.ht-info-label {
+    font-size: .67rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--color-text-tertiary);
+    margin: 0 0 2px;
+}
+
+.ht-info-valor {
+    font-size: .88rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+/* Rankings */
+.ht-rankings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 1.75rem;
+}
+
+@media (max-width: 560px) {
+    .ht-rankings {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ht-rank-card {
+    background: var(--color-background-primary);
+    border: 1px solid var(--color-border-tertiary);
+    border-radius: 16px;
+    padding: 18px 20px;
+}
+
+.ht-rank-title {
+    font-size: .82rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 2px;
+}
+
+.ht-rank-sub {
+    font-size: .7rem;
+    color: var(--color-text-tertiary);
+    margin: 0 0 14px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.ht-rank-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ht-rank-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--color-border-tertiary);
+}
+
+.ht-rank-item:last-child {
+    border-bottom: none;
+}
+
+.ht-rank-pos {
+    width: 18px;
+    font-size: .72rem;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.ht-rank-pos--1 {
+    color: var(--color-text-warning);
+}
+
+.ht-rank-pos--2 {
+    color: var(--color-text-secondary);
+}
+
+.ht-rank-pos--3 {
+    color: var(--color-text-warning);
+    opacity: .6;
+}
+
+.ht-rank-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ht-rank-nombre {
+    font-size: .8rem;
+    color: var(--color-text-primary);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ht-rank-bar-wrap {
+    width: 100%;
+    height: 3px;
+    background: var(--color-border-tertiary);
+    border-radius: 2px;
+    margin-top: 4px;
+}
+
+.ht-rank-bar {
+    height: 3px;
+    border-radius: 2px;
+    transition: width .4s ease;
+}
+
+.ht-rank-bar--rec {
+    background: var(--color-text-success);
+}
+
+.ht-rank-bar--sold {
+    background: var(--color-text-warning);
+}
+
+.ht-rank-meta {
+    font-size: .68rem;
+    color: var(--color-text-tertiary);
+    flex-shrink: 0;
+}
+
+/* Sobre el restaurante */
+.ht-about {
+    background: var(--color-background-primary);
+    border: 1px solid var(--color-border-tertiary);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 1.5rem;
+}
+
+.ht-about-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.ht-about-title {
+    font-size: .9rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 4px;
+}
+
+.ht-about-address {
+    font-size: .72rem;
+    color: var(--color-text-tertiary);
+    margin: 0;
+}
+
+.ht-badge-open {
+    font-size: .68rem;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--color-background-success);
+    color: var(--color-text-success);
+    border: 1px solid var(--color-border-success);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ht-about-bio {
+    font-size: .83rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin: 0 0 16px;
+}
+
+.ht-stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-border-tertiary);
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+.ht-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.ht-stat-val {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.ht-stat-label {
+    font-size: .67rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--color-text-tertiary);
+}
+
+/* Horarios */
+.ht-horarios {
+    background: var(--color-background-primary);
+    border: 1px solid var(--color-border-tertiary);
+    border-radius: 16px;
+    padding: 18px 20px;
+}
+
+.ht-horarios-title {
+    font-size: .82rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 12px;
+}
+
+.ht-horarios-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ht-horario-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: .8rem;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--color-border-tertiary);
+}
+
+.ht-horario-row:last-child {
+    border-bottom: none;
+}
+
+.ht-horario-dia {
+    color: var(--color-text-secondary);
+}
+
+.ht-horario-hora {
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+.ht-horario-cerrado {
+    color: var(--color-text-tertiary);
+}
+
+
+/* ── Nota en horarios ── */
+.ht-horarios-nota {
+    font-size: 0.85rem;
+    color: var(--c-brand);
+    margin-bottom: var(--sp-sm);
+    padding: var(--sp-xs) var(--sp-sm);
+    background: var(--c-brand-glow);
+    border-radius: 4px;
+    border-left: 3px solid var(--c-brand);
+}
+
+/* ── Footer ── */
+.ht-footer {
+    margin-top: var(--sp-xl);
+    padding: var(--sp-lg);
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    text-align: center;
+}
+
+.ht-footer-text {
+    font-size: 0.9rem;
+    color: var(--c-text-muted);
+    line-height: 1.6;
+    margin-bottom: var(--sp-sm);
+    font-style: italic;
+}
+
+.ht-footer-contacto {
+    font-size: 0.85rem;
+    color: var(--c-text);
+    padding-top: var(--sp-sm);
+    border-top: 1px solid var(--c-border);
+}
+
+.ht-footer-contacto strong {
+    color: var(--c-brand);
+}
+
+/* ── Contenedor grid ── */
+.info-horarios {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    /* 66% y 33% aprox */
+    gap: var(--sp-lg);
+    margin-top: var(--sp-xl);
+}
+
+.ht-about {
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: var(--sp-lg);
+}
+
+.ht-horarios {
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: var(--sp-lg);
+    height: fit-content;
+    position: sticky;
+    top: var(--sp-md);
+}
+
+/* Responsive: una columna en tablet */
+@media (max-width: 968px) {
+    .info-horarios {
+        grid-template-columns: 1fr;
+    }
+
+    .ht-horarios {
+        position: static;
+    }
+}
