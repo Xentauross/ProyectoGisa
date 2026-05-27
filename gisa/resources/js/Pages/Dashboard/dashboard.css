@@ -1,0 +1,469 @@
+/*
+ * dashboard.css
+ * Estilos del Dashboard — separados de la lógica del componente.
+ * Importar en Dashboard.jsx: import './dashboard.css'
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
+
+/* ── Layout raíz ─────────────────────────────────────────── */
+.db-root {
+    font-family: 'Sora', sans-serif;
+    background: #f5f4f0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+}
+
+@media (min-width: 640px) {
+    .db-root {
+        padding: 32px 24px 64px;
+    }
+}
+
+.db-grid {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+    .db-grid {
+        grid-template-columns: 300px 1fr;
+    }
+}
+
+/* ── Card bienvenida ─────────────────────────────────────── */
+.card-bienvenida {
+    background: #1a1917;
+    border-radius: 20px;
+    padding: 28px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    grid-column: 1 / -1;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-bienvenida::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(251, 191, 36, .18) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1a1917;
+    flex-shrink: 0;
+}
+
+.bienvenida-texto h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: #fafaf9;
+    margin-bottom: 2px;
+}
+
+.bienvenida-texto p {
+    font-size: .78rem;
+    color: rgba(250, 250, 249, .45);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}
+
+.badge-rol {
+    margin-left: auto;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(251, 191, 36, .12);
+    border: 1px solid rgba(251, 191, 36, .25);
+    color: #fbbf24;
+    font-size: .72rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* ── Card genérica ───────────────────────────────────────── */
+.card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06), 0 4px 16px rgba(0, 0, 0, .04);
+}
+
+.card-label {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #a8a29e;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* ── Botones ─────────────────────────────────────────────── */
+.btn-sm {
+    font-size: .72rem;
+    font-family: 'Sora', sans-serif;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid #e7e5e4;
+    color: #78716c;
+    text-decoration: none;
+    transition: all .15s;
+    background: transparent;
+    cursor: pointer;
+}
+
+.btn-sm:hover {
+    background: #1a1917;
+    color: #fff;
+    border-color: #1a1917;
+}
+
+.btn-primary {
+    flex: 1;
+    padding: 10px;
+    border-radius: 999px;
+    background: #1a1917;
+    color: #fff;
+    border: none;
+    font-family: 'Sora', sans-serif;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: opacity .15s;
+}
+
+.btn-primary:hover {
+    opacity: .85;
+}
+
+.btn-secondary {
+    flex: 1;
+    padding: 10px;
+    border-radius: 999px;
+    background: transparent;
+    color: #78716c;
+    border: 1px solid #e7e5e4;
+    font-family: 'Sora', sans-serif;
+    font-size: .85rem;
+    cursor: pointer;
+}
+
+/* ── Perfil ──────────────────────────────────────────────── */
+.perfil-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.perfil-campo label {
+    display: block;
+    font-size: .67rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #a8a29e;
+    margin-bottom: 3px;
+}
+
+.perfil-campo span {
+    font-size: .9rem;
+    color: #1c1917;
+    font-weight: 500;
+}
+
+.perfil-full {
+    grid-column: 1 / -1;
+}
+
+.perfil-vacio {
+    text-align: center;
+    padding: 24px 0;
+    color: #a8a29e;
+    font-size: .85rem;
+}
+
+.perfil-vacio a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: #1a1917;
+    color: #fff;
+    font-size: .78rem;
+    text-decoration: none;
+}
+
+/* ── Calendario ──────────────────────────────────────────── */
+.cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.cal-mes {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: #1c1917;
+}
+
+.cal-nav {
+    display: flex;
+    gap: 6px;
+}
+
+.cal-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #e7e5e4;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    color: #78716c;
+    transition: all .15s;
+}
+
+.cal-btn:hover {
+    background: #1a1917;
+    color: #fff;
+    border-color: #1a1917;
+}
+
+.cal-dias-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+}
+
+.cal-ds {
+    text-align: center;
+    font-size: .65rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #a8a29e;
+    padding: 4px 0;
+}
+
+.cal-celdas {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.cal-celda {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: .78rem;
+    color: #44403c;
+}
+
+.cal-celda-hoy {
+    background: #1a1917;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.cal-celda-turno {
+    background: rgba(251, 191, 36, .1);
+}
+
+.cal-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: 2px;
+}
+
+.leyenda {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.leyenda-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.leyenda-label {
+    font-size: .68rem;
+    color: #a8a29e;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+/* ── Lista de turnos ─────────────────────────────────────── */
+.turno-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f4;
+}
+
+.turno-item:last-child {
+    border-bottom: none;
+}
+
+.turno-fecha {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #f5f4f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.turno-fecha-dia {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1c1917;
+    line-height: 1;
+}
+
+.turno-fecha-mes {
+    font-size: .6rem;
+    text-transform: uppercase;
+    color: #a8a29e;
+    letter-spacing: .05em;
+}
+
+.turno-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.turno-hora {
+    font-size: .88rem;
+    font-weight: 500;
+    color: #1c1917;
+}
+
+.turno-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-top: 2px;
+}
+
+.turno-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.turnos-vacio {
+    text-align: center;
+    padding: 28px 0;
+    color: #a8a29e;
+    font-size: .85rem;
+}
+
+/* ── Modal gestionar turno ───────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 16px;
+}
+
+.modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+}
+
+.modal h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #1c1917;
+    margin-bottom: 20px;
+}
+
+.modal-campo label {
+    display: block;
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #a8a29e;
+    margin-bottom: 5px;
+}
+
+.modal-campo input,
+.modal-campo select {
+    width: 100%;
+    border: 1px solid #e7e5e4;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: .88rem;
+    font-family: 'Sora', sans-serif;
+    color: #1c1917;
+    outline: none;
+    transition: border-color .15s;
+}
+
+.modal-campo input:focus,
+.modal-campo select:focus {
+    border-color: #1a1917;
+}
+
+.modal-acciones {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}

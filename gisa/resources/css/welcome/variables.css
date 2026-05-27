@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+:root {
+    --sidebar-width: 300px;
+    --c-bg: #0a0a0a;
+    --c-sidebar: #111111;
+    --c-card: #161616;
+    --c-border: #242424;
+    --c-border-hover: #333333;
+    --c-text: #f0f0f0;
+    --c-text-muted: #7a7a7a;
+    --c-text-subtle: #4a4a4a;
+    --c-brand: #c9a84c;
+    --c-brand-hover: #a8882f;
+    --c-brand-glow: rgba(201, 168, 76, 0.12);
+    --c-dropdown-bg: #1a1a1a;
+    --f-title: 'Playfair Display', Georgia, serif;
+    --f-body: 'Inter', system-ui, sans-serif;
+    --sp-xs: 0.4rem;
+    --sp-sm: 0.8rem;
+    --sp-md: 1.5rem;
+    --sp-lg: 2.5rem;
+    --sp-xl: 4rem;
+    --radius: 6px;
+    --transition: 0.22s ease;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}

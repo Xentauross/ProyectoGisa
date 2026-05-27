@@ -1,0 +1,215 @@
+.sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: var(--c-sidebar);
+    border-right: 1px solid var(--c-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-lg);
+    padding: var(--sp-lg) var(--sp-md);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-border) transparent;
+}
+
+/* -- Brand -- */
+.brand {
+    text-align: center;
+    letter-spacing: 3px;
+    line-height: 1;
+}
+
+.brand-name {
+    display: block;
+    font-family: var(--f-title);
+    font-size: 2rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.brand-sub {
+    display: block;
+    font-family: var(--f-title);
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--c-brand);
+    letter-spacing: 5px;
+    text-transform: lowercase;
+    margin-top: var(--sp-xs);
+}
+
+/* -- Nav -- */
+.nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-sm);
+}
+
+.nav-section-title {
+    font-size: 0.65rem;
+    color: var(--c-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+}
+
+/* -- Search -- */
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--c-text-muted);
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.7rem 2.5rem 0.7rem 2.2rem;
+    background: transparent;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    color: var(--c-text);
+    font-size: 0.875rem;
+    font-family: var(--f-body);
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.search-input::placeholder {
+    color: var(--c-text-subtle);
+}
+
+.search-input:focus {
+    border-color: var(--c-brand);
+    box-shadow: 0 0 0 2px var(--c-brand-glow);
+}
+
+.search-clear {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--c-text-muted);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: color var(--transition);
+}
+
+.search-clear:hover {
+    color: var(--c-text);
+}
+
+/* -- Filtros -- */
+.filter-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.filter-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.8rem;
+    background: transparent;
+    border: none;
+    border-left: 2px solid transparent;
+    border-radius: var(--radius);
+    color: var(--c-text-muted);
+    font-size: 0.875rem;
+    font-family: var(--f-body);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.filter-btn:hover {
+    color: var(--c-text);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.filter-btn.active {
+    color: var(--c-brand);
+    border-left-color: var(--c-brand);
+    background: var(--c-brand-glow);
+}
+
+.filter-btn-icon {
+    font-size: 1rem;
+}
+
+.filter-btn-label {
+    flex: 1;
+    text-align: left;
+}
+
+.filter-btn-count {
+    font-size: 0.7rem;
+    color: var(--c-text-subtle);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1px 6px;
+    border-radius: 10px;
+}
+
+.filter-btn.active .filter-btn-count {
+    color: var(--c-brand);
+}
+
+/* -- Auth -- */
+.auth-links {
+    margin-top: auto;
+    padding-top: var(--sp-md);
+    border-top: 1px solid var(--c-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-sm);
+}
+
+.auth-welcome {
+    font-size: 0.75rem;
+    color: var(--c-text-muted);
+    text-align: center;
+}
+
+.btn-auth {
+    display: block;
+    text-align: center;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-family: var(--f-body);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all var(--transition);
+}
+
+.btn-login {
+    color: var(--c-text-muted);
+    border: 1px solid var(--c-border);
+    background: transparent;
+}
+
+.btn-login:hover {
+    color: var(--c-text);
+    border-color: var(--c-text-muted);
+}
+
+.btn-panel {
+    background: var(--c-brand);
+    color: #000;
+    border: 1px solid var(--c-brand);
+}
+
+.btn-panel:hover {
+    background: var(--c-brand-hover);
+}

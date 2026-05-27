@@ -1,0 +1,65 @@
+.layout-wrapper {
+    display: flex;
+    height: 100dvh;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--f-body);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sp-xl);
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-border) transparent;
+}
+
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--sp-xl);
+    padding-bottom: var(--sp-md);
+    border-bottom: 1px solid var(--c-border);
+    gap: 1rem;
+}
+
+.header-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xs);
+}
+
+.section-title {
+    font-family: var(--f-title);
+    font-size: 2.4rem;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.section-subtitle {
+    font-size: 0.8rem;
+    color: var(--c-text-muted);
+}
+
+.limpiar-btn {
+    background: none;
+    color: var(--c-text-muted);
+    font-size: 0.75rem;
+    font-family: var(--f-body);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    transition: all var(--transition);
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+}
+
+.limpiar-btn:hover {
+    color: var(--c-brand);
+    border-color: var(--c-brand);
+}
