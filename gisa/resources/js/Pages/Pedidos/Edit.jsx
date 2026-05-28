@@ -3,15 +3,15 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function Edit({ auth, pedido, mesas, camareros, productos }) {
     const { data, setData, put, processing, errors } = useForm({
-        mesa_id:     pedido.mesa_id,
+        mesa_id: pedido.mesa_id,
         camarero_id: pedido.camarero_id,
-        estado:      pedido.estado,
+        estado: pedido.estado,
     });
 
     const lineaForm = useForm({
         producto_id: '',
-        cantidad:    1,
-        notas:       '',
+        cantidad: 1,
+        notas: '',
     });
 
     function submitPedido(e) {
@@ -65,9 +65,7 @@ export default function Edit({ auth, pedido, mesas, camareros, productos }) {
                                     <select value={data.camarero_id}
                                         onChange={(e) => setData('camarero_id', e.target.value)}
                                         className="w-full border rounded px-3 py-2 text-sm">
-                                        {camareros.map((c) => (
-                                            <option key={c.id} value={c.id}>{c.name}</option>
-                                        ))}
+                                        {camareros.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
                                     </select>
                                 </Campo>
 

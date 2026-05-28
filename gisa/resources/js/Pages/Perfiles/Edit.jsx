@@ -2,7 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function Edit({ auth, perfil, users }) {
-    const esAdmin = ['admin', 'gerente'].includes(auth.user.role);
+    const esAdmin = ['admin', 'gerente', 'aux_administrativo'].includes(auth.user.role);
     const esPropio = perfil.user_id === auth.user.id;
 
     const { data, setData, patch, processing, errors } = useForm({

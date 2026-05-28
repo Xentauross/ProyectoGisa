@@ -33,7 +33,7 @@ class PedidoController extends Controller
         $sort = in_array($request->sort, $allowed) ? $request->sort : 'id';
         $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
 
-        $pedidos = Pedido::with('mesa', 'camarero')
+        $pedidos = Pedido::with('mesa', 'camarero.perfil')
             ->orderBy($sort, $dir)
             ->paginate(20)
             ->appends($request->only('sort', 'dir'));
@@ -45,6 +45,13 @@ class PedidoController extends Controller
         ]);
     }
 
+    public function show(Pedido $pedido): Response
+    {
+        return Inertia::render('Pedidos/Show', [
+            'pedido' => $pedido->load('mesa', 'camarero.perfil', 'lineas.producto'),
+        ]);
+    }
+    
     public function create(): Response
     {
         return Inertia::render('Pedidos/Create', [
