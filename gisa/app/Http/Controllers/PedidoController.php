@@ -35,7 +35,7 @@ class PedidoController extends Controller
 
         $pedidos = Pedido::with('mesa', 'camarero.perfil')
             ->orderBy($sort, $dir)
-            ->paginate(20)
+            ->paginate(10)
             ->appends($request->only('sort', 'dir'));
 
         return Inertia::render('Pedidos/Index', [

@@ -35,9 +35,8 @@ export default function Index({ auth, usuarios, sort, dir }) {
                     </h2>
                     {/*validación y el botón */}
                     {['admin', 'gerente'].includes(auth.user.role) && (
-                        <Link href={route('usuarios.create')}
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm font-medium"
-                        >Nuevo usuario
+                        <Link href={route('usuarios.create')} className="btn btn-primary btn-sm">
+                            Nuevo usuario
                         </Link>
                     )}
                 </div>

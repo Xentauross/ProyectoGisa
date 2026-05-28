@@ -36,7 +36,7 @@ public function index(Request $request): Response
         }
     
         // Paginamos
-        $usuarios = $query->paginate(20)
+        $usuarios = $query->paginate(10)
             ->appends($request->only('sort', 'dir'));
     
         return Inertia::render('Usuarios/Index', [
