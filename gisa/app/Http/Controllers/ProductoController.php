@@ -19,7 +19,7 @@ class ProductoController extends Controller
     
         $productos = Producto::with('ingredientes')
             ->orderBy($sort, $dir)
-            ->paginate(15)
+            ->paginate(10)
             ->appends($request->only('sort', 'dir'));
     
         return Inertia::render('Productos/Index', [

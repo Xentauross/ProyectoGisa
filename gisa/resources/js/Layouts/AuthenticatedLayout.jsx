@@ -1,284 +1,86 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
     const role = user.role;
     const can = (roles) => roles.includes(role);
 
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
-
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex">
-                            <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
-                                </Link>
-                            </div>
-
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero', 'aux_administrativo']) && (
-                                    <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                        Dashboard
-                                    </NavLink>
-                                )}
-
-                                {can(['admin', 'gerente']) && (
-                                    <NavLink href={route('usuarios.index')} active={route().current('users.*')}>
-                                        Usuarios
-                                    </NavLink>
-                                )}
-
-                                {can(['admin', 'gerente', 'aux_administrativo']) && (
-                                    <NavLink href={route('perfiles.index')} active={route().current('perfiles.*')}>
-                                        Empleados
-                                    </NavLink>
-                                )}
-
-                                {can(['admin', 'gerente', 'metre']) && (
-                                    <NavLink href={route('horarios.index')} active={route().current('horarios.*')}>
-                                        Horarios
-                                    </NavLink>
-                                )}
-
-                                {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero']) && (
-                                    <NavLink href={route('pedidos.index')} active={route().current('pedidos.*')}>
-                                        Pedidos
-                                    </NavLink>
-                                )}
-
-                                {can(['admin', 'gerente', 'metre', 'camarero',]) && (
-                                    <NavLink href={route('mesas.index')} active={route().current('mesas.*')}>
-                                        Mesas
-                                    </NavLink>
-                                )}
-
-                                {can(['admin', 'gerente', 'metre']) && (
-                                    <NavLink href={route('productos.index')} active={route().current('productos.*')}>
-                                        Productos
-                                    </NavLink>
-                                )}
-
-                                {can(['admin', 'gerente',]) && (
-                                    <NavLink href={route('ingredientes.index')} active={route().current('ingredientes.*')}>
-                                        Ingredientes
-                                    </NavLink>
-                                )}
-                            </div>
+        <div className="min-h-screen bg-base-100 text-base-content ">
+            {/* Barra de navegación principal */}
+            <nav className="navbar bg-base-300 shadow-md px-4 sm:px-8 font-bold">
+                <div className="navbar-start">
+                    {/* Menú Móvil */}
+                    <div className="dropdown">
+                        <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
+                            </svg>
                         </div>
-
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route('logout')}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
-                        </div>
-
-                        <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState,
-                                    )
-                                }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
-                            >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
+                        <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-300 rounded-box w-52 border border-slate-700">
+                            {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero', 'aux_administrativo']) && <li><Link href={route('dashboard')}>Dashboard</Link></li>}
+                            {can(['admin', 'gerente']) && <li><Link href={route('usuarios.index')}>Usuarios</Link></li>}
+                            {can(['admin', 'gerente', 'aux_administrativo']) && <li><Link href={route('perfiles.index')}>Empleados</Link></li>}
+                            {can(['admin', 'gerente', 'metre']) && <li><Link href={route('horarios.index')}>Horarios</Link></li>}
+                            {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero']) && <li><Link href={route('pedidos.index')}>Pedidos</Link></li>}
+                            {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina']) && <li><Link href={route('mesas.index')}>Mesas</Link></li>}
+                            {can(['admin', 'gerente', 'metre']) && <li><Link href={route('productos.index')}>Productos</Link></li>}
+                            {can(['admin', 'gerente']) && <li><Link href={route('ingredientes.index')}>Ingredientes</Link></li>}
+                        </ul>
                     </div>
+                    {/* Logo y Nombre */}
+                    <Link href="/" className="btn btn-ghost text-xl text-accent font-bold">
+                        <ApplicationLogo className="block h-6 w-auto fill-current mr-2" />
+                        Sistema
+                    </Link>
                 </div>
 
-                <div
-                    className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden'
-                    }
-                >
-                    <div className="space-y-1 pb-3 pt-2">
-                        {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero', 'aux_administrativo']) && (
-                            <ResponsiveNavLink
-                                href={route('dashboard')}
-                                active={route().current('dashboard')}
-                            >
-                                Dashboard
-                            </ResponsiveNavLink>
-                        )}
+                {/* Menú Escritorio */}
+                <div className="navbar-center hidden lg:flex">
+                    <ul className="menu menu-horizontal px-1 gap-1">
+                        {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero', 'aux_administrativo']) && <li><Link href={route('dashboard')} className="text-slate-200 hover:text-accent">Dashboard</Link></li>}
+                        {can(['admin', 'gerente']) && <li><Link href={route('usuarios.index')} className="hover:text-primary">Usuarios</Link></li>}
+                        {can(['admin', 'gerente', 'aux_administrativo']) && <li><Link href={route('perfiles.index')} className="hover:text-primary">Empleados</Link></li>}
+                        {can(['admin', 'gerente', 'metre']) && <li><Link href={route('horarios.index')} className="hover:text-primary">Horarios</Link></li>}
+                        {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero']) && <li><Link href={route('pedidos.index')} className="hover:text-primary">Pedidos</Link></li>}
+                        {can(['admin', 'gerente', 'metre', 'camarero']) && <li><Link href={route('mesas.index')} className="hover:text-primary">Mesas</Link></li>}
+                        {can(['admin', 'gerente', 'metre']) && <li><Link href={route('productos.index')} className="hover:text-primary">Productos</Link></li>}
+                        {can(['admin', 'gerente']) && <li><Link href={route('ingredientes.index')} className="hover:text-primary">Ingredientes</Link></li>}
+                    </ul>
+                </div>
 
-                        {can(['admin', 'gerente']) && (
-                            <ResponsiveNavLink
-                                href={route('usuarios.index')}
-                                active={route().current('users.*')}
-                            >
-                                Usuarios
-                            </ResponsiveNavLink>
-                        )}
-
-                        {can(['admin', 'gerente', 'aux_administrativo']) && (
-                            <ResponsiveNavLink
-                                href={route('perfiles.index')}
-                                active={route().current('perfiles.*')}
-                            >
-                                Empledados
-                            </ResponsiveNavLink>
-                        )}
-
-                        {can(['admin', 'gerente', 'metre']) && (
-                            <ResponsiveNavLink
-                                href={route('horarios.index')}
-                                active={route().current('horarios.*')}
-                            >
-                                Horarios
-                            </ResponsiveNavLink>
-                        )}
-
-                        {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero']) && (
-                            <ResponsiveNavLink
-                                href={route('pedidos.index')}
-                                active={route().current('pedidos.*')}
-                            >
-                                Pedidos
-                            </ResponsiveNavLink>
-                        )}
-
-                        {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina']) && (
-                            <ResponsiveNavLink
-                                href={route('mesas.index')}
-                                active={route().current('mesas.*')}
-                            >
-                                Mesas
-                            </ResponsiveNavLink>
-                        )}
-
-                        {can(['admin', 'gerente', 'metre']) && (
-                            <ResponsiveNavLink
-                                href={route('productos.index')}
-                                active={route().current('productos.*')}
-                            >
-                                Productos
-                            </ResponsiveNavLink>
-                        )}
-
-                        {can(['admin', 'gerente', 'metre']) && (
-                            <ResponsiveNavLink
-                                href={route('ingredientes.index')}
-                                active={route().current('ingredientes.*')}
-                            >
-                                Ingredientes
-                            </ResponsiveNavLink>
-                        )}
-                    </div>
-
-                    <div className="border-t border-gray-200 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
-                                {user.name}
-                            </div>
-                            <div className="text-sm font-medium text-gray-500">
-                                {user.email}
-                            </div>
+                {/* Zona de Perfil */}
+                <div className="navbar-end">
+                    <div className="dropdown dropdown-end">
+                        <div tabIndex={0} role="button" className="btn btn-ghost">
+                            {user.name}
+                            <svg className="h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
                         </div>
-
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route('logout')}
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
+                        <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-4 shadow-lg bg-base-200 rounded-box w-56 border border-neutral">
+                            <li className="mb-2 border-b border-neutral pb-2 text-primary font-medium px-2">{user.email}</li>
+                            <li><Link href={route('profile.edit')}>Mi Perfil</Link></li>
+                            <li><Link href={route('logout')} method="post" as="button" className="text-red-400 hover:text-red-300 hover:bg-red-900/20">Cerrar Sesión</Link></li>
+                        </ul>
                     </div>
                 </div>
             </nav>
 
+            {/* Sub-header */}
             {header && (
-                <header className="bg-white shadow">
+                <header className="bg-base-200 border-b border-neutral shadow-sm">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>
                 </header>
             )}
 
-            <main>{children}</main>
+            {/* Contenido principal */}
+            <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                {children}
+            </main>
         </div>
     );
 }

@@ -20,7 +20,7 @@ class PerfilController extends Controller
     
         $perfiles = Perfil::with('user')
             ->orderBy($sort, $dir)
-            ->paginate(20)
+            ->paginate(10)
             ->appends($request->only('sort', 'dir'));
     
         return Inertia::render('Perfiles/Index', [
