@@ -20,9 +20,6 @@ export default function Index({ auth, perfiles, sort, dir }) {
             <Head title="Empleados" />
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center mb-6">
-                        <h1 className="text-2xl font-semibold text-gray-800">Empleados</h1>
-                    </div>
                     <div className="bg-white shadow rounded-lg overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="w-full border-collapse">
@@ -52,7 +49,9 @@ export default function Index({ auth, perfiles, sort, dir }) {
                                                 <div className="flex justify-end gap-3">
                                                     <Link href={route('perfiles.show', perfil.id)} className="text-gray-500 hover:underline">Ver</Link>
                                                     <Link href={route('perfiles.edit', perfil.id)} className="text-blue-600 hover:underline">Editar</Link>
-                                                    <button onClick={() => eliminar(perfil.id)} className="text-red-600 hover:underline">Eliminar</button>
+                                                    {['admin', 'gerente'].includes(auth.user.role) && (
+                                                        <Link href={route('perfiles.destroy', perfil.id)} className="text-red-600 hover:underline">Eliminar</Link>
+                                                    )}
                                                 </div>
                                             </td>
                                         </tr>

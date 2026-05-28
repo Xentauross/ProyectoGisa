@@ -73,7 +73,7 @@ class PerfilController extends Controller
     {
         // Permite al propio usuario o a admin/gerente
         abort_if(
-            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente']),
+            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente', 'aux_administrativo']),
             403
         );
 
@@ -89,7 +89,7 @@ class PerfilController extends Controller
     {
         // Permite al propio usuario o a admin/gerente
         abort_if(
-            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente']),
+            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente', 'aux_administrativo']),
             403
         );
 
@@ -109,7 +109,7 @@ class PerfilController extends Controller
         $perfil->update($request->except('user_id'));
 
         // Redirige según quién actualizó
-        $destino = $perfil->user_id === auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente'])
+        $destino = $perfil->user_id === auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente', 'aux_administrativo'])
             ? redirect()->route('dashboard')->with('success', 'Perfil actualizado correctamente.')
             : redirect()->route('perfiles.index')->with('success', 'Perfil actualizado correctamente.');
 
