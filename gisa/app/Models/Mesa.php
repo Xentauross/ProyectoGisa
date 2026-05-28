@@ -19,9 +19,9 @@ class Mesa extends Model
     // -------------------------------------------------------
     // Helpers de estado
     // -------------------------------------------------------
-    public function estaLibre(): bool   { return $this->estado === 'libre'; }
-    public function estaOcupada(): bool { return $this->estado === 'ocupada'; }
-
+    protected $casts = [
+        'estado' => 'string',
+    ];
     // -------------------------------------------------------
     // Relaciones
     // -------------------------------------------------------

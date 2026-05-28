@@ -8,10 +8,10 @@ export default function Create({ auth, ingredientes }) {
         descripcion: '',
         precio: '',
         url_imagen: '',
+        alergeno: '',
         es_recomendado: false,
         ingredientes: [],
     });
-
     function submit(e) {
         e.preventDefault();
         post(route('productos.store'));
@@ -84,6 +84,14 @@ export default function Create({ auth, ingredientes }) {
                                 <input type="text" value={data.url_imagen}
                                     onChange={(e) => setData('url_imagen', e.target.value)}
                                     className="w-full border rounded px-3 py-2 text-sm" />
+                            </Campo>
+
+                            <Campo label="Alérgeno" error={errors.alergeno}>
+                                <input type="text" value={data.alergeno}
+                                    onChange={(e) => setData('alergeno', e.target.value)}
+                                    maxLength={45}
+                                    className="w-full border rounded px-3 py-2 text-sm"
+                                    placeholder="Gluten, lactosa, frutos secos..." />
                             </Campo>
 
                             <div className="flex items-center gap-2">

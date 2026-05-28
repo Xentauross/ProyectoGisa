@@ -40,6 +40,7 @@ export default function Edit({ auth, mesa }) {
                                     className="w-full border rounded px-3 py-2 text-sm">
                                     <option value="libre">Libre</option>
                                     <option value="ocupada">Ocupada</option>
+                                    <option value="reservada">Reservada</option>
                                 </select>
                             </Campo>
 

@@ -13,17 +13,31 @@ use Inertia\Response;
 
 class PedidoController extends Controller
 {
+    private function getCamareros(): \Illuminate\Support\Collection
+    {
+        return User::whereIn('role', ['admin', 'metre', 'camarero'])
+            ->with('perfil')
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn($u) => [
+                'id'     => $u->id,
+                'nombre' => $u->perfil
+                    ? $u->perfil->nombre . ' ' . $u->perfil->apellido1
+                    : $u->name,
+            ]);
+    }
+
     public function index(Request $request): Response
     {
         $allowed = ['id', 'mesa_id', 'camarero_id', 'estado', 'precio_total'];
         $sort = in_array($request->sort, $allowed) ? $request->sort : 'id';
         $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
-    
+
         $pedidos = Pedido::with('mesa', 'camarero')
             ->orderBy($sort, $dir)
             ->paginate(20)
             ->appends($request->only('sort', 'dir'));
-    
+
         return Inertia::render('Pedidos/Index', [
             'pedidos' => $pedidos,
             'sort'    => $sort,
@@ -34,8 +48,8 @@ class PedidoController extends Controller
     public function create(): Response
     {
         return Inertia::render('Pedidos/Create', [
-            'mesas'     => Mesa::where('estado', 'libre')->orderBy('numero')->get(['id', 'numero']),
-            'camareros' => User::whereIn('role', ['admin', 'metre', 'camarero'])->orderBy('name')->get(['id', 'name']),
+            'mesas'     => Mesa::whereIn('estado', ['libre','reservada'])->orderBy('numero')->get(['id', 'numero']),
+            'camareros' => $this->getCamareros(),
         ]);
     }
 
@@ -48,10 +62,10 @@ class PedidoController extends Controller
         ]);
 
         $pedido = Pedido::create([
-            'mesa_id'     => $request->mesa_id,
-            'camarero_id' => $request->camarero_id,
-            'estado'      => $request->estado,
-            'precio_total'=> 0,
+            'mesa_id'      => $request->mesa_id,
+            'camarero_id'  => $request->camarero_id,
+            'estado'       => $request->estado,
+            'precio_total' => 0,
         ]);
 
         Mesa::find($request->mesa_id)->update(['estado' => 'ocupada']);
@@ -65,7 +79,7 @@ class PedidoController extends Controller
         return Inertia::render('Pedidos/Edit', [
             'pedido'    => $pedido->load('mesa', 'camarero', 'lineas.producto'),
             'mesas'     => Mesa::orderBy('numero')->get(['id', 'numero']),
-            'camareros' => User::whereIn('role', ['admin', 'metre', 'camarero'])->orderBy('name')->get(['id', 'name']),
+            'camareros' => $this->getCamareros(),
             'productos' => Producto::orderBy('nombre')->get(['id', 'nombre', 'precio']),
         ]);
     }
@@ -97,7 +111,6 @@ class PedidoController extends Controller
             ->with('success', 'Pedido eliminado correctamente.');
     }
 
-    // Añadir línea al pedido
     public function addLinea(Request $request, Pedido $pedido): RedirectResponse
     {
         $request->validate([
@@ -106,10 +119,8 @@ class PedidoController extends Controller
             'notas'       => 'nullable|string|max:200',
         ]);
 
-        // Buscamos el producto para obtener su precio actual
         $producto = Producto::findOrFail($request->producto_id);
 
-        //Guardamos la línea con el precio histórico
         $pedido->lineas()->create([
             'producto_id'     => $request->producto_id,
             'cantidad'        => $request->cantidad,
@@ -117,14 +128,12 @@ class PedidoController extends Controller
             'notas'           => $request->notas,
         ]);
 
-        // Recalculamos usando el precio de la línea, no el del producto
         $total = $pedido->lineas()->get()->sum(fn($l) => $l->cantidad * $l->precio_unitario);
         $pedido->update(['precio_total' => $total]);
 
         return redirect()->route('pedidos.edit', $pedido);
     }
 
-    // Eliminar línea del pedido
     public function removeLinea(Pedido $pedido, $lineaId): RedirectResponse
     {
         $pedido->lineas()->findOrFail($lineaId)->delete();

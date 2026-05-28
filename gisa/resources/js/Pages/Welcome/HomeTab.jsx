@@ -35,7 +35,9 @@ const INFO_RESTAURANTE = {
 const RankingList = memo(function RankingList({ titulo, subtitulo, productos, colorBarra }) {
     if (!productos?.length) return null;
 
-    const maxPedidos = Math.max(...productos.map(p => p.pedidos ?? 0), 1);
+    // Valor efectivo para cada producto (igual que el que usaremos en la barra)
+    const valorEfectivo = (p, i) => p.pedidos ?? (100 - i * 12);
+    const maxValor = Math.max(...productos.map((p, i) => valorEfectivo(p, i)), 1);
 
     return (
         <div className="ht-rank-card">
@@ -45,7 +47,7 @@ const RankingList = memo(function RankingList({ titulo, subtitulo, productos, co
                 {productos.map((p, i) => (
                     <li key={p.id} className="ht-rank-item">
                         <span className={`ht-rank-pos ht-rank-pos--${i + 1}`} aria-hidden="true">
-                            {i === 0 ? '⚓' : i + 1}
+                            {i === 0 ? '1' : i + 1}
                         </span>
                         <div className="ht-rank-info">
                             <span className="ht-rank-nombre">{p.nombre}</span>
@@ -53,7 +55,7 @@ const RankingList = memo(function RankingList({ titulo, subtitulo, productos, co
                                 <div
                                     className="ht-rank-bar"
                                     style={{
-                                        width: `${((p.pedidos ?? (100 - i * 12)) / maxPedidos) * 100}%`,
+                                        width: `${(valorEfectivo(p, i) / maxValor) * 100}%`,
                                         background: colorBarra,
                                     }}
                                 />

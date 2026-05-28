@@ -64,7 +64,13 @@ export default function Show({ auth, producto }) {
                                     <p className="text-gray-700 text-sm leading-relaxed">{producto.descripcion}</p>
                                 </div>
                             )}
-
+                            {/* Alergeno */}
+                            {producto.alergeno && (
+                                <div>
+                                    <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Alérgenos</p>
+                                    <p className="text-gray-700 text-sm">{producto.alergeno}</p>
+                                </div>
+                            )}
                             {/* Ingredientes */}
                             {producto.ingredientes?.length > 0 && (
                                 <div>
