@@ -8,6 +8,7 @@ export default function Edit({ auth, producto, ingredientes }) {
         descripcion: producto.descripcion ?? '',
         precio: producto.precio,
         url_imagen: producto.url_imagen ?? '',
+        alergeno: producto.alergeno ?? '',
         es_recomendado: producto.es_recomendado,
         ingredientes: producto.ingredientes.map((i) => i.id),
     });
@@ -84,6 +85,14 @@ export default function Edit({ auth, producto, ingredientes }) {
                                 <input type="text" value={data.url_imagen}
                                     onChange={(e) => setData('url_imagen', e.target.value)}
                                     className="w-full border rounded px-3 py-2 text-sm" />
+                            </Campo>
+
+                            <Campo label="Alérgeno" error={errors.alergeno}>
+                                <input type="text" value={data.alergeno}
+                                    onChange={(e) => setData('alergeno', e.target.value)}
+                                    maxLength={45}
+                                    className="w-full border rounded px-3 py-2 text-sm"
+                                    placeholder="Gluten, lactosa, frutos secos..." />
                             </Campo>
 
                             <div className="flex items-center gap-2">

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -10,21 +9,12 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@gisa.es',
-        ]);
-
         $this->call([
-                    IngredienteSeeder::class, 
-                    /*ProductoSeeder::class,    */
-                ]);
-        }
+            UserSeeder::class,        // users + perfiles
+            IngredienteSeeder::class, // ingredientes base
+            ProductoSeeder::class,    // platos y bebidas + relación producto_ingrediente
+        ]);
+    }
 }

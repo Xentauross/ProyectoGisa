@@ -41,7 +41,10 @@ export default function Index({ auth, mesas, sort, dir }) {
                                     <tr key={mesa.id} className="border-t hover:bg-gray-50">
                                         <td className="p-4">Mesa {mesa.numero}</td>
                                         <td className="p-4">
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${mesa.estado === 'libre' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                            <span className={`px-2 py-1 rounded text-xs font-medium ${mesa.estado === 'libre' ? 'bg-green-100 text-green-700' :
+                                                    mesa.estado === 'reservada' ? 'bg-yellow-100 text-yellow-700' :
+                                                        'bg-red-100 text-red-700'
+                                                }`}>
                                                 {mesa.estado}
                                             </span>
                                         </td>

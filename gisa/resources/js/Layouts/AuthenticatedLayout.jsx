@@ -56,19 +56,19 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </NavLink>
                                 )}
 
-                                {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina']) && (
+                                {can(['admin', 'gerente', 'metre', 'camarero',]) && (
                                     <NavLink href={route('mesas.index')} active={route().current('mesas.*')}>
                                         Mesas
                                     </NavLink>
                                 )}
 
-                                {can(['admin', 'gerente', 'jefe_cocina']) && (
+                                {can(['admin', 'gerente', 'metre']) && (
                                     <NavLink href={route('productos.index')} active={route().current('productos.*')}>
                                         Productos
                                     </NavLink>
                                 )}
 
-                                {can(['admin', 'gerente', 'jefe_cocina', 'cocinero']) && (
+                                {can(['admin', 'gerente',]) && (
                                     <NavLink href={route('ingredientes.index')} active={route().current('ingredientes.*')}>
                                         Ingredientes
                                     </NavLink>
