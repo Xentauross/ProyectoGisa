@@ -32,7 +32,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     {/* Logo y Nombre */}
                     <Link href="/" className="btn btn-ghost text-xl text-accent font-bold">
                         <ApplicationLogo className="block h-6 w-auto fill-current mr-2" />
-                        Sistema
+                        G.I.S.A.
                     </Link>
                 </div>
 

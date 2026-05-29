@@ -2,9 +2,6 @@ import { useMemo } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
-// Estilos
-import './Dashboard/dashboard.css';
-
 // Custom hooks
 import { useCalendario } from './Dashboard/hooks/useCalendario';
 import { useTurnos } from './Dashboard/hooks/useTurnos';
@@ -32,6 +29,7 @@ export default function Dashboard({ auth, miPerfil, misHorarios = [] }) {
     // ── Hooks ──────────────────────────────────────────────
     const calendario = useCalendario(misHorarios);
     const turnos = useTurnos(misHorarios);
+    console.log('turnoActivo:', turnos.turnoActivo); // ← añade esto
 
     // ── Datos derivados (sólo cálculos de presentación) ───
     const iniciales = useMemo(() => getIniciales(auth.user.name), [auth.user.name]);

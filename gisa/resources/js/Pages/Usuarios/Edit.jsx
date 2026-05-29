@@ -40,7 +40,7 @@ export default function Edit({ auth, usuario, roles }) {
                             <h1 className="text-2xl font-semibold text-gray-800">Editar usuario</h1>
                             <p className="text-sm text-gray-500 font-mono mt-0.5">{usuario.name}</p>
                         </div>
-                        <Link href={route('usuarios.show', usuario.id)} className="text-gray-500 hover:underline text-sm">
+                        <Link href={route('usuarios.index', usuario.id)} className="text-gray-500 hover:underline text-sm">
                             ← Volver
                         </Link>
                     </div>

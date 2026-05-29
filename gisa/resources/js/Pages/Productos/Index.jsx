@@ -20,7 +20,7 @@ export default function Index({ auth, productos, sort, dir }) {
                 <div className="flex justify-between items-center">
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">Productos</h2>
                     <Link href={route('productos.create')}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        className="btn btn-primary btn-sm">
                         Nuevo producto
                     </Link>
                 </div>
