@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\IngredienteController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,21 +18,8 @@ use Inertia\Inertia;
 // PÚBLICA
 // ═══════════════════════════════════════════════════════
 
-Route::get('/', function () {
-    $productos    = \App\Models\Producto::with('ingredientes')->get();
-    $recomendados = $productos->where('es_recomendado', true)->take(6)->values();
-    $masVendidos  = $productos->sortByDesc(fn($p) => $p->lineas()->sum('cantidad'))->take(6)->values();
-    $ingredientes = \App\Models\Ingrediente::orderBy('nombre')->get(['id', 'nombre']);
+Route::get('/', WelcomeController::class)->name('home');
 
-    return Inertia::render('Welcome', [
-        'canLogin'     => Route::has('login'),
-        'canRegister'  => Route::has('register'),
-        'productos'    => $productos->values(),
-        'recomendados' => $recomendados,
-        'masVendidos'  => $masVendidos,
-        'ingredientes' => $ingredientes,
-    ]);
-})->name('home');
 
 Route::get('/register',  fn() => redirect('/login'))->name('register');
 Route::post('/register', fn() => redirect('/login'));
