@@ -27,7 +27,7 @@ export default function Index({ auth, horarios, sort, dir }) {
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                         Horarios
                     </h2>
-                    <Link href={route('horarios.create')} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm font-medium"
+                    <Link href={route('horarios.create')} className="btn btn-primary btn-sm"
                     >Nuevo horario
                     </Link>
                 </div>

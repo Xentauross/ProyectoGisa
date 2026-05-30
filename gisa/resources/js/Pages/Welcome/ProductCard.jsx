@@ -1,4 +1,3 @@
-// resources/js/Pages/Welcome/ProductCard.jsx
 import { memo } from 'react';
 import { formatPrecio } from './welcomeUtils';
 
@@ -24,7 +23,7 @@ const ProductCard = memo(function ProductCard({ producto, filtroIngredientes }) 
                     <div className="product-title-group">
                         <h2 className="product-name">{producto.nombre}</h2>
                         {producto.es_recomendado && (
-                            <span className="badge-rec" aria-label="Plato recomendado">★ Recomendación</span>
+                            <span className="badge-rec" aria-label="Plato recomendado">Recomendación</span>
                         )}
                     </div>
                     <span className="product-price">{formatPrecio(producto.precio)}</span>
@@ -45,6 +44,20 @@ const ProductCard = memo(function ProductCard({ producto, filtroIngredientes }) 
                                 {ing.nombre}
                             </span>
                         ))}
+                    </div>
+                )}
+
+                {producto.alergenos?.length > 0 && (
+                    <div className="product-alergenos" role="list" aria-label="Alérgenos">
+                        {producto.alergenos.map(a => {
+                            const id = typeof a === 'string' ? a : a.id;
+                            const nombre = typeof a === 'string' ? a : a.nombre;
+                            return (
+                                <span key={id} role="listitem" className="tag tag-alergeno" title={`Contiene: ${nombre}`}>
+                                    {nombre}
+                                </span>
+                            );
+                        })}
                     </div>
                 )}
             </div>

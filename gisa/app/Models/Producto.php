@@ -28,9 +28,11 @@ class Producto extends Model
         return [
             'precio'         => 'decimal:2',
             'es_recomendado' => 'boolean',
+            'alergeno'       => 'array',
         ];
     }
 
+    protected $appends = ['alergenos', 'ventas_totales'];
     // -------------------------------------------------------
     // Accessors
     // -------------------------------------------------------
@@ -41,6 +43,12 @@ class Producto extends Model
         return $this->lineas()->sum('cantidad');
     }
 
+    // Expone 'alergenos' al frontend,
+    // devuelve array vacío si el campo es null
+    public function getAlergenosAttribute(): array
+    {
+        return $this->alergeno ?? [];
+    }
     // -------------------------------------------------------
     // Relaciones
     // -------------------------------------------------------

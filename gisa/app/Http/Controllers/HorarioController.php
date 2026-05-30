@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Horario;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -49,7 +50,11 @@ class HorarioController extends Controller
             'estado'       => 'required|in:pendiente,confirmado,cancelado',
         ]);
 
-        $horario = Horario::create($request->only('user_id', 'inicio_turno', 'fin_turno', 'estado'));
+        $data = $request->only('user_id', 'estado');
+        $data['inicio_turno'] = Carbon::parse($request->inicio_turno);
+        $data['inicio_turno'] = Carbon::parse($request->inicio_turno);
+
+        $horario = Horario::create($data);
 
         try {
             $usuario = User::find($request->user_id);
@@ -81,7 +86,11 @@ class HorarioController extends Controller
             'estado'       => 'required|in:pendiente,confirmado,cancelado',
         ]);
 
-        $horario->update($request->only('user_id', 'inicio_turno', 'fin_turno', 'estado'));
+        $data = $request->only('user_id', 'estado');
+        $data['inicio_turno'] = Carbon::parse($request->inicio_turno, 'Europe/Madrid')->utc();
+        $data['fin_turno']    = Carbon::parse($request->fin_turno, 'Europe/Madrid')->utc();
+
+        $horario->update($data);
 
         try {
             $usuario = User::find($request->user_id);

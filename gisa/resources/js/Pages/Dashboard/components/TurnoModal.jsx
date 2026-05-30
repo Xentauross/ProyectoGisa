@@ -1,45 +1,33 @@
 import React, { memo } from 'react';
+import { createPortal } from 'react-dom';
 import { ESTADOS_TURNO } from '../constants';
 import { fmtDatetimeLocal } from '../utils';
 
-/**
- * Modal para gestionar (editar) un turno existente.
- *
- * @param {{
- *   turno:          object,
- *   onClose:        () => void,
- *   onGuardar:      (e: Event) => void,
- * }} props
- */
 const TurnoModal = memo(function TurnoModal({ turno, onClose, onGuardar }) {
     if (!turno) return null;
 
-    return (
+    return createPortal(
         <div
-            className="modal-overlay"
+            className="dashb-modal-overlay"
             onClick={onClose}
             role="dialog"
             aria-modal="true"
             aria-label="Gestionar turno"
         >
-            <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="dashb-modal" onClick={e => e.stopPropagation()}>
                 <h3>Gestionar turno</h3>
 
-                <form onSubmit={onGuardar} className="space-y-4" noValidate>
-                    <div className="modal-campo">
+                <form onSubmit={onGuardar} noValidate>
+                    <div className="dashb-modal-campo">
                         <label htmlFor="estado">Estado</label>
-                        <select
-                            id="estado"
-                            name="estado"
-                            defaultValue={turno.estado}
-                        >
+                        <select id="estado" name="estado" defaultValue={turno.estado}>
                             {ESTADOS_TURNO.map(({ value, label }) => (
                                 <option key={value} value={value}>{label}</option>
                             ))}
                         </select>
                     </div>
 
-                    <div className="modal-campo">
+                    <div className="dashb-modal-campo">
                         <label htmlFor="inicio_turno">Inicio real del turno</label>
                         <input
                             id="inicio_turno"
@@ -49,7 +37,7 @@ const TurnoModal = memo(function TurnoModal({ turno, onClose, onGuardar }) {
                         />
                     </div>
 
-                    <div className="modal-campo">
+                    <div className="dashb-modal-campo">
                         <label htmlFor="fin_turno">Fin real del turno</label>
                         <input
                             id="fin_turno"
@@ -59,10 +47,10 @@ const TurnoModal = memo(function TurnoModal({ turno, onClose, onGuardar }) {
                         />
                     </div>
 
-                    <div className="modal-acciones">
+                    <div className="dashb-modal-acciones">
                         <button
                             type="button"
-                            className="btn-secondary"
+                            className="dashb-btn-secondary"
                             onClick={onClose}
                             aria-label="Cancelar y cerrar modal"
                         >
@@ -70,7 +58,7 @@ const TurnoModal = memo(function TurnoModal({ turno, onClose, onGuardar }) {
                         </button>
                         <button
                             type="submit"
-                            className="btn-primary"
+                            className="dashb-btn-primary"
                             aria-label="Guardar cambios del turno"
                         >
                             Guardar
@@ -78,7 +66,8 @@ const TurnoModal = memo(function TurnoModal({ turno, onClose, onGuardar }) {
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 });
 

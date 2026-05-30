@@ -18,10 +18,15 @@ export default {
                 temaGisa: {
                     "primary": "#0d9488",
                     "primary-focus": "#0f766e",
+                    "primary-content": "#ffffff",
                     "secondary": "#14b8a6",
+                    "secondary-content": "#ffffff",
                     "accent": "#5eead4",
+                    "accent-content": "#0f172a",
 
                     "neutral": "#e2e8f0",
+                    "neutral-content": "#0f172a",
+
                     "base-100": "#d5e9e3",      // Fondo general
                     "base-200": "#ffffff",       // Tarjetas
                     "base-300": "#0f172a",       // Navbar (slate oscuro)

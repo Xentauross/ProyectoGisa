@@ -3,10 +3,17 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useState } from 'react'; // 1. Importar useState
 
 export default function Edit({ auth, horario, users }) {
+    const toLocalInput = (iso) => {
+        if (!iso) return '';
+        const d = new Date(iso);
+        const offset = d.getTimezoneOffset() * 60000;
+        return new Date(d - offset).toISOString().slice(0, 16);
+    };
+
     const { data, setData, put, processing, errors } = useForm({
         user_id: horario.user_id,
-        inicio_turno: horario.inicio_turno?.slice(0, 16) ?? '',
-        fin_turno: horario.fin_turno?.slice(0, 16) ?? '',
+        inicio_turno: toLocalInput(horario.inicio_turno),
+        fin_turno: toLocalInput(horario.fin_turno),
         estado: horario.estado,
     });
 
@@ -38,7 +45,7 @@ export default function Edit({ auth, horario, users }) {
             <Head title="Editar horario" />
 
             <div className="py-8">
-                <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
 
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-semibold text-gray-800">Editar horario</h1>
