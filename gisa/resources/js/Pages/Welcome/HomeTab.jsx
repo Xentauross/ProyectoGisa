@@ -160,9 +160,6 @@ const HomeTab = memo(function HomeTab({ recomendados = [], masVendidos = [] }) {
                 {/* Horarios */}
                 <section className="ht-horarios" aria-label="Horarios semanales">
                     <h3 className="ht-horarios-title">¿Cuándo estamos?</h3>
-                    <p className="ht-horarios-nota">
-                        💡 En Carnaval abrimos todos los días. ¡Consúltanos!
-                    </p>
                     <ul className="ht-horarios-list">
                         {r.horarios.map(h => (
                             <li key={h.dia} className="ht-horario-row">

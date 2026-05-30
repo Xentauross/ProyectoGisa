@@ -1,4 +1,3 @@
-// resources/js/Pages/Welcome/MiniCard.jsx
 import { memo } from 'react';
 import { formatPrecio } from './welcomeUtils';
 

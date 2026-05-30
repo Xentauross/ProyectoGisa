@@ -1,4 +1,3 @@
-// resources/js/Pages/Welcome/HorizontalSection.jsx
 import { memo } from 'react';
 import MiniCard from './MiniCard';
 

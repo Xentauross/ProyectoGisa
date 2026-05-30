@@ -14,7 +14,7 @@ class PerfilController extends Controller
 {
     public function index(Request $request): Response
     {
-        $allowed = ['nombre', 'apellido1', 'dni', 'telefono', 'num_seguridad_social', 'cuenta_bancaria'];
+        $allowed = ['nombre', 'apellido1', 'dni', 'telefono', 'num_seguridad_social',];
         $sort = in_array($request->sort, $allowed) ? $request->sort : 'nombre';
         $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
     
@@ -52,7 +52,7 @@ class PerfilController extends Controller
             'telefono'             => 'required|string|max:15',
             'fecha_nacimiento'     => 'required|date|before:today',
             'localidad'            => 'required|string|max:100',
-            'cuenta_bancaria'      => 'required|string|max:34|unique:perfiles,cuenta_bancaria',
+            'cuenta_bancaria'      => 'required|string|max:34',
         ]);
 
         Perfil::create($request->all());
@@ -102,7 +102,7 @@ class PerfilController extends Controller
             'telefono'             => 'required|string|max:15',
             'fecha_nacimiento'     => 'required|date|before:today',
             'localidad'            => 'required|string|max:100',
-            'cuenta_bancaria'      => ['required', 'string', 'max:34', Rule::unique('perfiles', 'cuenta_bancaria')->ignore($perfil->id)],
+            'cuenta_bancaria'      => ['required', 'string', 'max:34'],
         ]);
 
         // Usa only() sin user_id para que nunca se pueda cambiar

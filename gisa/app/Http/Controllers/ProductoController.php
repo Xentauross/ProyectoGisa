@@ -42,7 +42,8 @@ class ProductoController extends Controller
         $ingredientes = Ingrediente::orderBy('nombre')->get();
 
         return Inertia::render('Productos/Create', [
-            'ingredientes' => $ingredientes,
+            'ingredientes'      => $ingredientes,
+            'alergenosOpciones' => self::alergenosOpciones(),
         ]);
     }
 
@@ -76,8 +77,9 @@ class ProductoController extends Controller
         $ingredientes = Ingrediente::orderBy('nombre')->get();
 
         return Inertia::render('Productos/Edit', [
-            'producto'     => $producto->load('ingredientes'),
-            'ingredientes' => $ingredientes,
+            'producto'          => $producto->load('ingredientes'),
+            'ingredientes'      => $ingredientes,
+            'alergenosOpciones' => self::alergenosOpciones(),
         ]);
     }
 
