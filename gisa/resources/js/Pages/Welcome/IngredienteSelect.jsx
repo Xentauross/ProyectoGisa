@@ -1,4 +1,3 @@
-// resources/js/Pages/Welcome/IngredienteSelect.jsx
 import { useState, useRef, useEffect, memo } from 'react';
 
 /**

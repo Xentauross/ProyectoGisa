@@ -29,7 +29,7 @@ export default function Index({ auth, perfiles, sort, dir }) {
                                         {sh('dni', 'DNI')}
                                         {sh('telefono', 'Teléfono')}
                                         {sh('num_seguridad_social', 'Nº Seg. Social')}
-                                        {sh('cuenta_bancaria', 'Cuenta Bancaria')}
+                                        <th className="p-4">Cuenta Bancaria</th>
                                         <th className="p-4">Email</th>
                                         <th className="p-4 text-right">Acciones</th>
                                     </tr>

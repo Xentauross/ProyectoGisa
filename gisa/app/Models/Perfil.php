@@ -29,6 +29,7 @@ class Perfil extends Model
     {
         return [
             'fecha_nacimiento' => 'date',
+            'cuenta_bancaria'  => 'encrypted',
         ];
     }
 
