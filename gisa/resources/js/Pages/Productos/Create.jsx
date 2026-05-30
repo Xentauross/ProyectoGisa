@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { ALERGENOS_COMUNES } from '@/Pages/Welcome/welcomeConstants';
 
 export default function Create({ auth, ingredientes }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -8,10 +9,11 @@ export default function Create({ auth, ingredientes }) {
         descripcion: '',
         precio: '',
         url_imagen: '',
-        alergeno: '',
+        alergeno: [],
         es_recomendado: false,
         ingredientes: [],
     });
+
     function submit(e) {
         e.preventDefault();
         post(route('productos.store'));
@@ -22,6 +24,14 @@ export default function Create({ auth, ingredientes }) {
             data.ingredientes.includes(id)
                 ? data.ingredientes.filter((i) => i !== id)
                 : [...data.ingredientes, id]
+        );
+    }
+
+    function toggleAlergeno(id) {
+        setData('alergeno',
+            data.alergeno.includes(id)
+                ? data.alergeno.filter((a) => a !== id)
+                : [...data.alergeno, id]
         );
     }
 
@@ -86,12 +96,25 @@ export default function Create({ auth, ingredientes }) {
                                     className="w-full border rounded px-3 py-2 text-sm" />
                             </Campo>
 
-                            <Campo label="Alérgeno" error={errors.alergeno}>
-                                <input type="text" value={data.alergeno}
-                                    onChange={(e) => setData('alergeno', e.target.value)}
-                                    maxLength={45}
-                                    className="w-full border rounded px-3 py-2 text-sm"
-                                    placeholder="Gluten, lactosa, frutos secos..." />
+                            <Campo label="Alérgenos" error={errors.alergeno}>
+                                <div className="grid grid-cols-2 gap-2 mt-1">
+                                    {ALERGENOS_COMUNES.map((alg) => (
+                                        <label key={alg.id} className="flex items-center gap-2 text-sm cursor-pointer select-none">
+                                            <input
+                                                type="checkbox"
+                                                checked={data.alergeno.includes(alg.id)}
+                                                onChange={() => toggleAlergeno(alg.id)}
+                                                className="accent-red-600"
+                                            />
+                                            <span>{alg.icono} {alg.nombre}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                {data.alergeno.length > 0 && (
+                                    <p className="text-xs text-red-500 mt-2">
+                                        {data.alergeno.length} alérgeno{data.alergeno.length > 1 ? 's' : ''} marcado{data.alergeno.length > 1 ? 's' : ''}
+                                    </p>
+                                )}
                             </Campo>
 
                             <div className="flex items-center gap-2">

@@ -1,0 +1,333 @@
+/* Rojo de alérgenos como variable local, derivada del sistema */
+:root {
+    --c-alg: #c0392b;
+    --c-alg-soft: rgba(192, 57, 43, 0.12);
+    --c-alg-border: rgba(192, 57, 43, 0.28);
+}
+
+/* ── Wrapper ─────────────────────────────────────────────────────────────── */
+.alg-select-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-sm);
+}
+
+/* ── Trigger ─────────────────────────────────────────────────────────────── */
+.alg-select-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    color: var(--c-text-muted);
+    font-size: 0.875rem;
+    font-family: var(--f-body);
+    cursor: pointer;
+    transition: all var(--transition);
+    text-align: left;
+}
+
+.alg-select-trigger:hover {
+    border-color: var(--c-border-hover);
+    color: var(--c-text);
+}
+
+.alg-select-trigger--open {
+    border-color: var(--c-alg);
+    box-shadow: 0 0 0 2px var(--c-alg-soft);
+    color: var(--c-text);
+}
+
+.alg-select-trigger--active {
+    border-color: var(--c-alg);
+    color: var(--c-alg);
+    background: var(--c-alg-soft);
+}
+
+.alg-trigger-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    opacity: 0.55;
+    transition: opacity var(--transition);
+}
+
+.alg-select-trigger--active .alg-trigger-icon,
+.alg-select-trigger--open .alg-trigger-icon {
+    opacity: 1;
+}
+
+.alg-trigger-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.alg-badge {
+    background: var(--c-alg);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    flex-shrink: 0;
+}
+
+.alg-arrow {
+    font-size: 0.6rem;
+    color: var(--c-text-subtle);
+    flex-shrink: 0;
+}
+
+/* ── Dropdown ────────────────────────────────────────────────────────────── */
+.alg-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--c-dropdown-bg);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+    animation: algDropdownIn 0.18s ease;
+}
+
+@keyframes algDropdownIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Aviso contextual */
+.alg-dropdown-hint {
+    padding: 0.65rem 1rem;
+    font-size: 0.72rem;
+    line-height: 1.55;
+    color: var(--c-text-muted);
+    background: rgba(192, 57, 43, 0.06);
+    border-bottom: 1px solid var(--c-border);
+    border-left: 2px solid var(--c-alg);
+}
+
+.alg-dropdown-hint strong {
+    color: var(--c-alg);
+    font-weight: 500;
+}
+
+/* Buscador */
+.alg-dropdown-search {
+    padding: var(--sp-sm);
+    border-bottom: 1px solid var(--c-border);
+}
+
+.alg-search-input {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--c-border);
+    border-radius: 4px;
+    color: var(--c-text);
+    font-size: 0.8rem;
+    font-family: var(--f-body);
+    outline: none;
+    transition: border-color var(--transition);
+}
+
+.alg-search-input::placeholder {
+    color: var(--c-text-subtle);
+}
+
+.alg-search-input:focus {
+    border-color: var(--c-alg);
+    box-shadow: 0 0 0 2px var(--c-alg-soft);
+}
+
+/* Acciones */
+.alg-dropdown-actions {
+    padding: 0.5rem var(--sp-sm);
+    border-bottom: 1px solid var(--c-border);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.alg-action-btn {
+    background: none;
+    border: none;
+    color: var(--c-text-muted);
+    font-size: 0.72rem;
+    font-family: var(--f-body);
+    cursor: pointer;
+    transition: color var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.alg-action-btn:hover {
+    color: var(--c-alg);
+}
+
+/* Lista de opciones */
+.alg-options-list {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-border) transparent;
+}
+
+.alg-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    transition: background var(--transition);
+    font-size: 0.875rem;
+    color: var(--c-text-muted);
+    outline: none;
+}
+
+.alg-option:hover,
+.alg-option:focus {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--c-text);
+}
+
+.alg-option--selected {
+    color: var(--c-alg);
+    background: rgba(192, 57, 43, 0.06);
+}
+
+.alg-option--selected:hover {
+    background: var(--c-alg-soft);
+}
+
+.alg-option-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.alg-option-label {
+    flex: 1;
+}
+
+/* Check (✕ rojo cuando seleccionado) */
+.alg-option-check {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    color: var(--c-alg);
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.alg-option--selected .alg-option-check {
+    opacity: 1;
+}
+
+.alg-option-empty {
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--c-text-subtle);
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* Footer */
+.alg-dropdown-footer {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid var(--c-border);
+    font-size: 0.7rem;
+    color: var(--c-text-subtle);
+    text-align: center;
+}
+
+/* ── Tags seleccionados ──────────────────────────────────────────────────── */
+.alg-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.alg-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px 4px 10px;
+    background: var(--c-alg-soft);
+    border: 1px solid var(--c-alg-border);
+    border-radius: var(--radius);
+    color: var(--c-alg);
+    font-size: 0.72rem;
+}
+
+.alg-tag-remove {
+    background: none;
+    border: none;
+    color: var(--c-alg);
+    cursor: pointer;
+    font-size: 0.6rem;
+    padding: 0;
+    opacity: 0.6;
+    transition: opacity var(--transition);
+    line-height: 1;
+}
+
+.alg-tag-remove:hover {
+    opacity: 1;
+}
+
+/* ── Badge alérgeno en ProductCard ──────────────────────────────────────── */
+
+.product-alergenos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding-top: var(--sp-sm);
+    border-top: 1px solid var(--c-border);
+    margin-top: auto;
+}
+
+.tag-alg {
+    font-size: 0.62rem;
+    padding: 3px 9px;
+    border-radius: 3px;
+    border: 1px solid var(--c-alg-border);
+    color: var(--c-alg);
+    background: var(--c-alg-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all var(--transition);
+}
+
+/* ── Responsive — igual que .ing-dropdown en móvil ──────────────────────── */
+@media (max-width: 768px) {
+    .alg-dropdown {
+        position: fixed;
+        left: 1rem;
+        right: 1rem;
+        top: auto;
+    }
+}

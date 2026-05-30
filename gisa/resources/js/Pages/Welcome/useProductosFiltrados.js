@@ -2,33 +2,39 @@
 import { useState, useMemo, useCallback } from 'react';
 import { CATEGORIAS } from './welcomeConstants';
 
-/**
- * Custom hook que centraliza toda la lógica de filtrado de productos.
- * Separa el estado y los cálculos del árbol de renderizado.
- */
 export function useProductosFiltrados(productos = []) {
-    const [filtroCategoria, setFiltroCategoria]     = useState('todos');
+    const [filtroCategoria, setFiltroCategoria] = useState('todos');
     const [filtroIngredientes, setFiltroIngredientes] = useState([]);
-    const [busqueda, setBusqueda]                   = useState('');
+    const [filtroAlergenos, setFiltroAlergenos] = useState([]);
+    const [busqueda, setBusqueda] = useState('');
 
-    // ── Derivados memoizados ──────────────────────────────────────────
     const productosFiltrados = useMemo(() => {
         const termino = busqueda.toLowerCase().trim();
         return productos.filter(p => {
             const coincideCategoria =
                 filtroCategoria === 'todos' || p.tipo === filtroCategoria;
+
             const coincideBusqueda =
                 termino === '' ||
                 p.nombre.toLowerCase().includes(termino) ||
                 p.descripcion?.toLowerCase().includes(termino);
+
             const coincideIngredientes =
                 filtroIngredientes.length === 0 ||
                 filtroIngredientes.every(id =>
                     p.ingredientes?.some(ing => ing.id === id)
                 );
-            return coincideCategoria && coincideBusqueda && coincideIngredientes;
+
+            // Excluir productos que contengan algún alérgeno marcado
+            const sinAlergenos =
+                filtroAlergenos.length === 0 ||
+                !filtroAlergenos.some(aid =>
+                    p.alergenos?.includes(aid)
+                );
+
+            return coincideCategoria && coincideBusqueda && coincideIngredientes && sinAlergenos;
         });
-    }, [productos, filtroCategoria, busqueda, filtroIngredientes]);
+    }, [productos, filtroCategoria, busqueda, filtroIngredientes, filtroAlergenos]);
 
     const conteoCategoria = useMemo(() => {
         const counts = { todos: productos.length };
@@ -36,15 +42,16 @@ export function useProductosFiltrados(productos = []) {
         return counts;
     }, [productos]);
 
-    const hayFiltros = filtroCategoria !== 'todos'
-        || busqueda !== ''
-        || filtroIngredientes.length > 0;
+    const hayFiltros =
+        filtroCategoria !== 'todos' ||
+        busqueda !== '' ||
+        filtroIngredientes.length > 0 ||
+        filtroAlergenos.length > 0;
 
     const tituloActual = busqueda !== ''
         ? `Resultados para "${busqueda}"`
         : CATEGORIAS.find(c => c.key === filtroCategoria)?.label ?? 'Menú Completo';
 
-    // ── Callbacks estables ────────────────────────────────────────────
     const toggleIngrediente = useCallback((id) => {
         setFiltroIngredientes(prev =>
             prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
@@ -53,25 +60,34 @@ export function useProductosFiltrados(productos = []) {
 
     const clearIngredientes = useCallback(() => setFiltroIngredientes([]), []);
 
+    const toggleAlergeno = useCallback((id) => {
+        setFiltroAlergenos(prev =>
+            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+        );
+    }, []);
+
+    const clearAlergenos = useCallback(() => setFiltroAlergenos([]), []);
+
     const limpiarFiltros = useCallback(() => {
         setFiltroCategoria('todos');
         setBusqueda('');
         setFiltroIngredientes([]);
+        setFiltroAlergenos([]);
     }, []);
 
     return {
-        // Estado
         filtroCategoria, setFiltroCategoria,
         filtroIngredientes,
+        filtroAlergenos,
         busqueda, setBusqueda,
-        // Derivados
         productosFiltrados,
         conteoCategoria,
         hayFiltros,
         tituloActual,
-        // Acciones
         toggleIngrediente,
         clearIngredientes,
+        toggleAlergeno,
+        clearAlergenos,
         limpiarFiltros,
     };
 }

@@ -15,6 +15,7 @@ import '/resources/css/welcome/ingredients.css';
 import '/resources/css/welcome/cards.css';
 import '/resources/css/welcome/responsive.css';
 import '/resources/css/welcome/homeTab.css';
+import '/resources/css/welcome/alergenos.css';
 
 
 export default function Welcome({
@@ -29,6 +30,7 @@ export default function Welcome({
     const {
         filtroCategoria, setFiltroCategoria,
         filtroIngredientes, toggleIngrediente, clearIngredientes,
+        filtroAlergenos, toggleAlergeno, clearAlergenos,
         busqueda, setBusqueda,
         productosFiltrados,
         conteoCategoria,
@@ -49,6 +51,10 @@ export default function Welcome({
         toggleIngrediente(id);
         setPestañaActiva('carta');
     };
+    const handleToggleAlergeno = (id) => {
+        toggleAlergeno(id);
+        setPestañaActiva('carta');
+    };
 
     return (
         <>
@@ -61,6 +67,9 @@ export default function Welcome({
                     filtroIngredientes={filtroIngredientes}
                     toggleIngrediente={handleToggleIngrediente}
                     clearIngredientes={clearIngredientes}
+                    filtroAlergenos={filtroAlergenos}
+                    toggleAlergeno={handleToggleAlergeno}
+                    clearAlergenos={clearAlergenos}
                     ingredientes={ingredientes}
                     conteoCategoria={conteoCategoria}
                     auth={auth}
@@ -125,6 +134,9 @@ export default function Welcome({
                                             key={p.id}
                                             producto={p}
                                             filtroIngredientes={filtroIngredientes}
+                                            filtroAlergenos={filtroAlergenos}
+                                            toggleAlergeno={handleToggleAlergeno}
+                                            clearAlergenos={clearAlergenos}
                                         />
                                     ))
                                 )}

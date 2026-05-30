@@ -55,7 +55,8 @@ class ProductoController extends Controller
             'precio'         => 'required|numeric|min:0',
             'url_imagen'     => 'nullable|url|max:150',
             'es_recomendado' => 'boolean',
-            'alergeno'       => 'nullable|string|max:45',
+            'alergeno'       => 'nullable|array',
+            'alergeno.*'     => 'string|in:' . implode(',', array_column(self::alergenosOpciones(), 'id')),
             'ingredientes'   => 'nullable|array',
             'ingredientes.*' => 'integer|exists:ingredientes,id',
         ]);
@@ -89,7 +90,8 @@ class ProductoController extends Controller
             'precio'         => 'required|numeric|min:0',
             'url_imagen'     => 'nullable|url|max:150',
             'es_recomendado' => 'boolean',
-            'alergeno'       => 'nullable|string|max:45',
+            'alergeno'       => 'nullable|array',
+            'alergeno.*'     => 'string|in:' . implode(',', array_column(self::alergenosOpciones(), 'id')),
             'ingredientes'   => 'nullable|array',
             'ingredientes.*' => 'integer|exists:ingredientes,id',
         ]);
@@ -107,5 +109,26 @@ class ProductoController extends Controller
 
         return redirect()->route('productos.index')
             ->with('success', 'Producto eliminado correctamente.');
+    }
+
+    // Lista alérgenos del Reglamento UE 
+    public static function alergenosOpciones(): array
+    {
+        return [
+            ['id' => 'gluten',       'nombre' => 'Gluten'],
+            ['id' => 'lacteos',      'nombre' => 'Lácteos'],
+            ['id' => 'huevo',        'nombre' => 'Huevo'],
+            ['id' => 'pescado',      'nombre' => 'Pescado'],
+            ['id' => 'marisco',      'nombre' => 'Marisco'],
+            ['id' => 'frutos_secos', 'nombre' => 'Frutos secos'],
+            ['id' => 'soja',         'nombre' => 'Soja'],
+            ['id' => 'apio',         'nombre' => 'Apio'],
+            ['id' => 'mostaza',      'nombre' => 'Mostaza'],
+            ['id' => 'sesamo',       'nombre' => 'Sésamo'],
+            ['id' => 'sulfitos',     'nombre' => 'Sulfitos'],
+            ['id' => 'moluscos',     'nombre' => 'Moluscos'],
+            ['id' => 'altramuces',   'nombre' => 'Altramuces'],
+            ['id' => 'cacahuetes',   'nombre' => 'Cacahuetes'],
+        ];
     }
 }

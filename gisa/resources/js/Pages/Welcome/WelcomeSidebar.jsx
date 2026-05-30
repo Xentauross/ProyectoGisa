@@ -1,17 +1,14 @@
-// resources/js/Pages/Welcome/WelcomeSidebar.jsx
 import { memo } from 'react';
 import { Link } from '@inertiajs/react';
 import { CATEGORIAS } from './welcomeConstants';
 import IngredienteSelect from './IngredienteSelect';
+import AlergenoSelect from './AlergenoSelect';
 
-/**
- * Sidebar de navegación y filtros.
- * Incluye navegación por pestañas: Inicio / Carta.
- */
 const WelcomeSidebar = memo(function WelcomeSidebar({
     busqueda, setBusqueda,
     filtroCategoria, setFiltroCategoria,
     filtroIngredientes, toggleIngrediente, clearIngredientes,
+    filtroAlergenos, toggleAlergeno, clearAlergenos,
     ingredientes,
     conteoCategoria,
     auth,
@@ -20,13 +17,11 @@ const WelcomeSidebar = memo(function WelcomeSidebar({
 }) {
     return (
         <aside className="sidebar" aria-label="Filtros y navegación">
-            {/* MARCA */}
             <div className="brand" role="banner">
                 <span className="brand-name">Gisa</span>
                 <span className="brand-sub">Restaurant</span>
             </div>
 
-            {/* PESTAÑAS */}
             <nav className="nav-section" aria-label="Secciones principales">
                 <ul className="filter-list" role="list">
                     <li>
@@ -50,7 +45,6 @@ const WelcomeSidebar = memo(function WelcomeSidebar({
                 </ul>
             </nav>
 
-            {/* BUSCADOR — solo visible en carta */}
             {pestañaActiva === 'carta' && (
                 <>
                     <section className="nav-section">
@@ -67,11 +61,7 @@ const WelcomeSidebar = memo(function WelcomeSidebar({
                                 autoComplete="off"
                             />
                             {busqueda && (
-                                <button
-                                    className="search-clear"
-                                    onClick={() => setBusqueda('')}
-                                    aria-label="Limpiar búsqueda"
-                                >✕</button>
+                                <button className="search-clear" onClick={() => setBusqueda('')} aria-label="Limpiar búsqueda">✕</button>
                             )}
                         </div>
                     </section>
@@ -106,22 +96,27 @@ const WelcomeSidebar = memo(function WelcomeSidebar({
                             />
                         </section>
                     )}
+
+                    {/* ── ALÉRGENOS ── */}
+                    <section className="nav-section" aria-label="Filtrar por alérgenos">
+                        <h2 className="nav-section-title">Alérgenos a evitar</h2>
+                        <AlergenoSelect
+                            filtroAlergenos={filtroAlergenos}
+                            toggleAlergeno={toggleAlergeno}
+                            onClear={clearAlergenos}
+                        />
+                    </section>
                 </>
             )}
 
-            {/* ACCESO */}
             <div className="auth-links">
                 {auth.user ? (
                     <>
                         <span className="auth-welcome">Hola, {auth.user.name}</span>
-                        <Link href={route('dashboard')} className="btn-auth btn-panel">
-                            Panel de Control
-                        </Link>
+                        <Link href={route('dashboard')} className="btn-auth btn-panel">Panel de Control</Link>
                     </>
                 ) : (
-                    <Link href={route('login')} className="btn-auth btn-login">
-                        Acceso Empleados
-                    </Link>
+                    <Link href={route('login')} className="btn-auth btn-login">Acceso Empleados</Link>
                 )}
             </div>
         </aside>
