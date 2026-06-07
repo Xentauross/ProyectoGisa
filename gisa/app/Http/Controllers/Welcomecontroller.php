@@ -15,13 +15,13 @@ class WelcomeController extends Controller
 
         $recomendados = $productos
             ->where('es_recomendado', true)
-            ->take(6)
+            ->take(5)
             ->values();
 
         // 1 sola query en lugar de N queries (una por producto)
         $masVendidos = Producto::withSum('lineas', 'cantidad')
             ->orderByDesc('lineas_sum_cantidad')
-            ->take(6)
+            ->take(5)
             ->get()
             ->map(fn($p) => array_merge($p->toArray(), [
                 'pedidos' => (int) ($p->lineas_sum_cantidad ?? 0),

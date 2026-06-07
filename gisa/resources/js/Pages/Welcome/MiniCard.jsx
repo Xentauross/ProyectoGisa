@@ -6,7 +6,7 @@ import { formatPrecio } from './welcomeUtils';
  */
 const MiniCard = memo(function MiniCard({ producto }) {
     return (
-        <article className="card-mini" aria-label={producto.nombre}>
+        <article className="card-mini" role="listitem" aria-label={producto.nombre}>
             <div className="card-mini-image" aria-hidden="true">
                 {producto.imagen
                     ? <img src={producto.imagen} alt={producto.nombre} loading="lazy" />

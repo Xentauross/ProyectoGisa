@@ -104,6 +104,6 @@ class UserSeeder extends Seeder
                 Perfil::factory()->create(['user_id' => $user->id]);
             });
 
-        $this->command->info('✅  UserSeeder: usuarios fijos y 20 aleatorios insertados.');
+        $this->command->info('UserSeeder: usuarios fijos y 20 aleatorios insertados.');
     }
 }
