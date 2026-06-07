@@ -3,7 +3,7 @@ import pymysql
 
 # Conexión a la base de datos
 conexion = pymysql.connect(
-    host     = '127.0.0.1',
+    host     = 'db',
     port     = 3306,
     user     = 'root',
     password = 'root',
