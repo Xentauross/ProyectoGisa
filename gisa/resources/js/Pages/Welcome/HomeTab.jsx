@@ -31,11 +31,9 @@ const INFO_RESTAURANTE = {
 
 // ── Sub-componentes ───────────────────────────────────────
 
-/** Tarjeta de ranking con barra de progreso. */
 const RankingList = memo(function RankingList({ titulo, subtitulo, productos, colorBarra }) {
     if (!productos?.length) return null;
 
-    // Valor efectivo para cada producto (igual que el que usaremos en la barra)
     const valorEfectivo = (p, i) => p.pedidos ?? (100 - i * 12);
     const maxValor = Math.max(...productos.map((p, i) => valorEfectivo(p, i)), 1);
 
@@ -47,7 +45,7 @@ const RankingList = memo(function RankingList({ titulo, subtitulo, productos, co
                 {productos.map((p, i) => (
                     <li key={p.id} className="ht-rank-item">
                         <span className={`ht-rank-pos ht-rank-pos--${i + 1}`} aria-hidden="true">
-                            {i === 0 ? '1' : i + 1}
+                            {i + 1}
                         </span>
                         <div className="ht-rank-info">
                             <span className="ht-rank-nombre">{p.nombre}</span>
@@ -73,7 +71,6 @@ const RankingList = memo(function RankingList({ titulo, subtitulo, productos, co
     );
 });
 
-/** Tarjeta de información rápida. */
 const InfoCard = memo(function InfoCard({ icono, label, valor }) {
     return (
         <div className="ht-info-card">
@@ -86,13 +83,15 @@ const InfoCard = memo(function InfoCard({ icono, label, valor }) {
 
 // ── Componente principal ──────────────────────────────────
 
-/**
- * Pestaña de inicio del menú: info del restaurante + rankings.
- *
- * @param {{ recomendados: Array, masVendidos: Array }} props
- */
 const HomeTab = memo(function HomeTab({ recomendados = [], masVendidos = [] }) {
     const r = INFO_RESTAURANTE;
+
+    // Día actual en español capitalizado
+    const hoyRaw = new Date().toLocaleDateString('es-ES', { weekday: 'long' });
+    const hoy = hoyRaw.charAt(0).toUpperCase() + hoyRaw.slice(1);
+
+    const horarioHoy = r.horarios.find(h => h.dia === hoy);
+    const valorHorarioHoy = horarioHoy?.cerrado ? 'Cerrado hoy' : (horarioHoy?.hora ?? r.horario);
 
     return (
         <section className="ht-root" aria-label="Inicio — información del restaurante">
@@ -102,32 +101,40 @@ const HomeTab = memo(function HomeTab({ recomendados = [], masVendidos = [] }) {
                 <p className="ht-kicker">Con sabor a Cádiz desde 1987</p>
                 <h2 className="ht-nombre">{r.nombre}</h2>
                 <p className="ht-slogan">{r.slogan}</p>
-                <div className="ht-pills" aria-label="Datos rápidos">
-                    <span className="ht-pill">Barrio de La Viña</span>
-                    <span className="ht-pill">⭐ {r.valoracion}</span>
-                    <span className="ht-pill">Casa oficial del Carnaval</span>
-                    <span className="ht-pill">Producto de la Bahía</span>
+                <div className="flex flex-wrap gap-2" aria-label="Datos rápidos">
+                    <span className="text-xs font-medium px-3 py-1 rounded-full inline-flex items-center gap-1 text-white-800 border border-purple-200">
+                        Barrio de La Viña
+                    </span>
+                    <span className="text-xs font-medium px-3 py-1 rounded-full inline-flex items-center gap-1 text-white-800 border border-amber-200">
+                        <i className="ti ti-star" aria-hidden="true" /> {r.valoracion}
+                    </span>
+                    <span className="text-xs font-medium px-3 py-1 rounded-full inline-flex items-center gap-1 text-white-800 border border-orange-200">
+                        Casa oficial del Carnaval
+                    </span>
+                    <span className="text-xs font-medium px-3 py-1 rounded-full inline-flex items-center gap-1  text-white-800 border border-teal-200">
+                        Producto de la Bahía
+                    </span>
                 </div>
             </header>
 
             {/* Info rápida */}
             <div className="ht-info-grid" role="list" aria-label="Información del restaurante">
-                <InfoCard icono="🕐" label="Horario hoy" valor={r.horario} />
-                <InfoCard icono="📞" label="Reservas" valor={r.telefono} />
-                <InfoCard icono="👥" label="Aforo" valor={r.capacidad} />
-                <InfoCard icono="⚓" label="Desde" valor={r.fundacion.split('·')[0].trim()} />
+                <InfoCard icono={<i className="ti ti-clock" aria-hidden="true" />} label="Horario hoy" valor={valorHorarioHoy} />
+                <InfoCard icono={<i className="ti ti-phone" aria-hidden="true" />} label="Reservas" valor={r.telefono} />
+                <InfoCard icono={<i className="ti ti-users" aria-hidden="true" />} label="Aforo" valor={r.capacidad} />
+                <InfoCard icono={<i className="ti ti-anchor" aria-hidden="true" />} label="Desde" valor={r.fundacion.split('·')[0].trim()} />
             </div>
 
             {/* Rankings en paralelo */}
             <div className="ht-rankings" aria-label="Rankings de platos">
                 <RankingList
-                    titulo="⚓ Del Mercado Central"
+                    titulo="Del Mercado Central"
                     subtitulo="Lo mejor de la lonja hoy"
                     productos={recomendados.slice(0, 5)}
                     colorBarra="#1e7a9e"
                 />
                 <RankingList
-                    titulo="🔥 Los de siempre"
+                    titulo="Los de siempre"
                     subtitulo="Lo más pedido en La Viña"
                     productos={masVendidos.slice(0, 5)}
                     colorBarra="#d4911f"
@@ -140,7 +147,7 @@ const HomeTab = memo(function HomeTab({ recomendados = [], masVendidos = [] }) {
                     <div className="ht-about-header">
                         <div>
                             <h3 className="ht-about-title">La historia de Gisa</h3>
-                            <p className="ht-about-address">📍 {r.direccion}</p>
+                            <p className="ht-about-address"><i className="ti ti-map-pin" aria-hidden="true" /> {r.direccion}</p>
                         </div>
                         <span className="ht-badge-open" aria-label="Estado: abierto ahora">
                             Abierto ahora
@@ -162,8 +169,14 @@ const HomeTab = memo(function HomeTab({ recomendados = [], masVendidos = [] }) {
                     <h3 className="ht-horarios-title">¿Cuándo estamos?</h3>
                     <ul className="ht-horarios-list">
                         {r.horarios.map(h => (
-                            <li key={h.dia} className="ht-horario-row">
-                                <span className="ht-horario-dia">{h.dia}</span>
+                            <li
+                                key={h.dia}
+                                className={`ht-horario-row ${h.dia === hoy ? 'ht-horario-row--hoy' : ''}`}
+                            >
+                                <span className="ht-horario-dia">
+                                    {h.dia}
+                                    {h.dia === hoy && <span className="ht-horario-hoy-badge">hoy</span>}
+                                </span>
                                 <span className={h.cerrado ? 'ht-horario-cerrado' : 'ht-horario-hora'}>
                                     {h.hora}
                                 </span>
@@ -180,7 +193,7 @@ const HomeTab = memo(function HomeTab({ recomendados = [], masVendidos = [] }) {
                     Si vienes en febrero, pregunta por nuestro menú especial chirigotero.
                 </p>
                 <p className="ht-footer-contacto">
-                    📞 <strong>{r.telefono}</strong> · 📧 reservas@restaurantegisa.es
+                    <i className="ti ti-phone" aria-hidden="true" /> <strong>{r.telefono}</strong> · <i className="ti ti-mail" aria-hidden="true" /> reservas@restaurantegisa.es
                 </p>
             </footer>
 

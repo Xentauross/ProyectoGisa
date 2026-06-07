@@ -5,6 +5,7 @@
 }
 
 @media (max-width: 768px) {
+
     .layout-wrapper {
         flex-direction: column;
         overflow-y: auto;

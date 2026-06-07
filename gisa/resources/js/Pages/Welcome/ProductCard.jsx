@@ -14,7 +14,7 @@ const ProductCard = memo(function ProductCard({ producto, filtroIngredientes }) 
             <div className="product-image" aria-hidden="true">
                 {producto.imagen
                     ? <img src={producto.imagen} alt={producto.nombre} loading="lazy" />
-                    : <span className="product-emoji">{ }</span>
+                    : <span className="product-emoji" aria-hidden="true"><i className="ti ti-tools-kitchen-2" /></span>
                 }
             </div>
 

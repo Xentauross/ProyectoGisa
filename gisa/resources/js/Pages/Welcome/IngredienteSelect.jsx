@@ -64,7 +64,7 @@ const IngredienteSelect = memo(function IngredienteSelect({
                 </span>
                 {totalSeleccionados > 0
                     ? <span className="ing-select-badge" aria-label={`${totalSeleccionados} seleccionados`}>{totalSeleccionados}</span>
-                    : <span className="ing-select-arrow" aria-hidden="true">{isOpen ? '▲' : '▼'}</span>
+                    : <span className="ing-select-arrow" aria-hidden="true"><i className={`ti ${isOpen ? 'ti-chevron-up' : 'ti-chevron-down'}`} /></span>
                 }
             </button>
 
@@ -86,7 +86,7 @@ const IngredienteSelect = memo(function IngredienteSelect({
                     {totalSeleccionados > 0 && (
                         <div className="ing-dropdown-actions">
                             <button className="ing-action-btn" onClick={() => { onClear(); setBusquedaIng(''); }}>
-                                Quitar todos ✕
+                                Quitar todos <i className="ti ti-x" aria-hidden="true" />
                             </button>
                         </div>
                     )}
@@ -107,7 +107,7 @@ const IngredienteSelect = memo(function IngredienteSelect({
                                         onKeyDown={e => e.key === 'Enter' && toggleIngrediente(ing.id)}
                                         tabIndex={0}
                                     >
-                                        <span className="ing-option-check" aria-hidden="true">{selected ? '✓' : ''}</span>
+                                        <span className="ing-option-check" aria-hidden="true">{selected ? <i className="ti ti-check" /> : ''}</span>
                                         <span className="ing-option-label">{ing.nombre}</span>
                                     </li>
                                 );
@@ -133,7 +133,7 @@ const IngredienteSelect = memo(function IngredienteSelect({
                         return (
                             <span key={id} className="ing-tag" role="listitem">
                                 {ing.nombre}
-                                <button className="ing-tag-remove" onClick={() => toggleIngrediente(id)} aria-label={`Quitar ${ing.nombre}`}>✕</button>
+                                <button className="ing-tag-remove" onClick={() => toggleIngrediente(id)} aria-label={`Quitar ${ing.nombre}`}><i className="ti ti-x" aria-hidden="true" /></button>
                             </span>
                         );
                     })}

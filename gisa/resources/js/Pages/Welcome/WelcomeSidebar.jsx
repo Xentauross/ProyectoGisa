@@ -50,7 +50,7 @@ const WelcomeSidebar = memo(function WelcomeSidebar({
                     <section className="nav-section">
                         <h2 className="nav-section-title">Buscar en carta</h2>
                         <div className="search-wrapper">
-                            <span className="search-icon" aria-hidden="true">⌕</span>
+                            <span className="search-icon" aria-hidden="true"><i className="ti ti-search" /></span>
                             <input
                                 type="search"
                                 placeholder="Plato, ingrediente, bebida..."
@@ -61,7 +61,7 @@ const WelcomeSidebar = memo(function WelcomeSidebar({
                                 autoComplete="off"
                             />
                             {busqueda && (
-                                <button className="search-clear" onClick={() => setBusqueda('')} aria-label="Limpiar búsqueda">✕</button>
+                                <button className="search-clear" onClick={() => setBusqueda('')} aria-label="Limpiar búsqueda"><i className="ti ti-x" aria-hidden="true" /></button>
                             )}
                         </div>
                     </section>

@@ -66,6 +66,6 @@ class IngredienteSeeder extends Seeder
             Ingrediente::firstOrCreate(['nombre' => $nombre]);
         }
 
-        $this->command->info('✅  IngredienteSeeder: ' . count($this->ingredientes) . ' ingredientes insertados.');
+        $this->command->info('IngredienteSeeder: ' . count($this->ingredientes) . ' ingredientes insertados.');
     }
 }

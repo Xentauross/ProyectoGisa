@@ -100,15 +100,15 @@ export default function Welcome({
                                 </div>
                                 {hayFiltros && (
                                     <button className="limpiar-btn" onClick={limpiarFiltros}>
-                                        Limpiar filtros ✕
+                                        Limpiar filtros <i className="ti ti-x" aria-hidden="true" />
                                     </button>
                                 )}
                             </header>
 
                             {!hayFiltros && (
                                 <>
-                                    <HorizontalSection titulo="✦ Sugerencias del Chef" productos={recomendados} />
-                                    <HorizontalSection titulo="✦ Los más solicitados" productos={masVendidos} divider />
+                                    <HorizontalSection titulo="Sugerencias del Chef" productos={recomendados} />
+                                    <HorizontalSection titulo="Los más solicitados" productos={masVendidos} divider />
                                     {(recomendados.length > 0 || masVendidos.length > 0) && (
                                         <h3 className="horizontal-title horizontal-title--full">Selección Completa</h3>
                                     )}
@@ -122,7 +122,7 @@ export default function Welcome({
                             >
                                 {productosFiltrados.length === 0 ? (
                                     <div className="vacio" role="status">
-                                        <span aria-hidden="true">🔍</span>
+                                        <i className="ti ti-search" aria-hidden="true" style={{ fontSize: '2rem' }} />
                                         <p>No encontramos platos con esas preferencias.</p>
                                         <button className="limpiar-btn" onClick={limpiarFiltros}>
                                             Limpiar filtros

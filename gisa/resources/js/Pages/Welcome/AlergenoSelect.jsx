@@ -58,7 +58,7 @@ const AlergenoSelect = memo(function AlergenoSelect({
                 </span>
                 {total > 0
                     ? <span className="alg-badge" aria-label={`${total} excluidos`}>{total}</span>
-                    : <span className="alg-arrow" aria-hidden="true">{isOpen ? '▲' : '▼'}</span>
+                    : <span className="alg-arrow" aria-hidden="true"><i className={`ti ${isOpen ? 'ti-chevron-up' : 'ti-chevron-down'}`} /></span>
                 }
             </button>
 
@@ -82,7 +82,7 @@ const AlergenoSelect = memo(function AlergenoSelect({
                     {total > 0 && (
                         <div className="alg-dropdown-actions">
                             <button className="alg-action-btn" onClick={() => { onClear(); setBusqueda(''); }}>
-                                Quitar restricciones ✕
+                                Quitar restricciones <i className="ti ti-x" aria-hidden="true" />
                             </button>
                         </div>
                     )}
@@ -104,7 +104,7 @@ const AlergenoSelect = memo(function AlergenoSelect({
                                 >
                                     <span className="alg-option-icon" aria-hidden="true">{a.icono}</span>
                                     <span className="alg-option-label">{a.nombre}</span>
-                                    {sel && <span className="alg-option-check" aria-hidden="true">✕</span>}
+                                    {sel && <span className="alg-option-check" aria-hidden="true"><i className="ti ti-x" /></span>}
                                 </li>
                             );
                         })}
@@ -127,7 +127,7 @@ const AlergenoSelect = memo(function AlergenoSelect({
                         return (
                             <span key={id} className="alg-tag" role="listitem">
                                 <span aria-hidden="true">{a.icono}</span> Sin {a.nombre}
-                                <button className="alg-tag-remove" onClick={() => toggleAlergeno(id)} aria-label={`Quitar restricción ${a.nombre}`}>✕</button>
+                                <button className="alg-tag-remove" onClick={() => toggleAlergeno(id)} aria-label={`Quitar restricción ${a.nombre}`}><i className="ti ti-x" aria-hidden="true" /></button>
                             </span>
                         );
                     })}
