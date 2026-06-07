@@ -22,10 +22,10 @@ export default function AuthenticatedLayout({ header, children }) {
                             {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero', 'aux_administrativo']) && <li><Link href={route('dashboard')}>Dashboard</Link></li>}
                             {can(['admin', 'gerente']) && <li><Link href={route('usuarios.index')}>Usuarios</Link></li>}
                             {can(['admin', 'gerente', 'aux_administrativo']) && <li><Link href={route('perfiles.index')}>Empleados</Link></li>}
-                            {can(['admin', 'gerente', 'metre']) && <li><Link href={route('horarios.index')}>Horarios</Link></li>}
+                            {can(['admin', 'gerente',]) && <li><Link href={route('horarios.index')}>Horarios</Link></li>}
                             {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero']) && <li><Link href={route('pedidos.index')}>Pedidos</Link></li>}
                             {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina']) && <li><Link href={route('mesas.index')}>Mesas</Link></li>}
-                            {can(['admin', 'gerente', 'metre']) && <li><Link href={route('productos.index')}>Productos</Link></li>}
+                            {can(['admin', 'gerente',]) && <li><Link href={route('productos.index')}>Productos</Link></li>}
                             {can(['admin', 'gerente']) && <li><Link href={route('ingredientes.index')}>Ingredientes</Link></li>}
                         </ul>
                     </div>
@@ -42,10 +42,10 @@ export default function AuthenticatedLayout({ header, children }) {
                         {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero', 'aux_administrativo']) && <li><Link href={route('dashboard')} className="text-slate-200 hover:text-accent">Dashboard</Link></li>}
                         {can(['admin', 'gerente']) && <li><Link href={route('usuarios.index')} className="hover:text-primary">Usuarios</Link></li>}
                         {can(['admin', 'gerente', 'aux_administrativo']) && <li><Link href={route('perfiles.index')} className="hover:text-primary">Empleados</Link></li>}
-                        {can(['admin', 'gerente', 'metre']) && <li><Link href={route('horarios.index')} className="hover:text-primary">Horarios</Link></li>}
+                        {can(['admin', 'gerente',]) && <li><Link href={route('horarios.index')} className="hover:text-primary">Horarios</Link></li>}
                         {can(['admin', 'gerente', 'metre', 'camarero', 'jefe_cocina', 'cocinero']) && <li><Link href={route('pedidos.index')} className="hover:text-primary">Pedidos</Link></li>}
                         {can(['admin', 'gerente', 'metre', 'camarero']) && <li><Link href={route('mesas.index')} className="hover:text-primary">Mesas</Link></li>}
-                        {can(['admin', 'gerente', 'metre']) && <li><Link href={route('productos.index')} className="hover:text-primary">Productos</Link></li>}
+                        {can(['admin', 'gerente',]) && <li><Link href={route('productos.index')} className="hover:text-primary">Productos</Link></li>}
                         {can(['admin', 'gerente']) && <li><Link href={route('ingredientes.index')} className="hover:text-primary">Ingredientes</Link></li>}
                     </ul>
                 </div>
