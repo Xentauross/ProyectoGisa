@@ -58,7 +58,7 @@ export default function Show({ auth, pedido }) {
                     </div>
 
                     {/* Líneas */}
-                    <div className="bg-white shadow rounded-lg p-6">
+                    <div className="overflow-x-auto bg-white shadow rounded-lg p-6">
                         <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">
                             Productos
                         </h2>

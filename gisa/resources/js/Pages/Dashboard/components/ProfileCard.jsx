@@ -1,14 +1,16 @@
 import React, { memo } from 'react';
 import { Link } from '@inertiajs/react';
 
-const ProfileCard = memo(function ProfileCard({ miPerfil, perfilId }) {
+const ProfileCard = memo(function ProfileCard({ miPerfil, perfilId, role }) {
+    const puedeCrear = ['admin', 'gerente', 'aux_administrativo'].includes(role);
+
     return (
         <div className="dashb-card" aria-label="Mis datos de perfil">
             <div className="dashb-card-header">
                 <span className="dashb-card-label" style={{ marginBottom: 0 }}>Mis datos</span>
                 {perfilId
                     ? <Link href={route('perfiles.edit', perfilId)} className="dashb-btn-sm">Editar</Link>
-                    : <Link href={route('perfiles.create')} className="dashb-btn-sm">Crear perfil</Link>
+                    : puedeCrear && <Link href={route('perfiles.create')} className="dashb-btn-sm">Crear perfil</Link>
                 }
             </div>
 
@@ -37,8 +39,8 @@ const ProfileCard = memo(function ProfileCard({ miPerfil, perfilId }) {
                 </div>
             ) : (
                 <div className="dashb-perfil-vacio" role="status">
-                    <p>Sin perfil asignado</p>
-                    <Link href={route('perfiles.create')}>+ Crear perfil</Link>
+                    <p>Sin empleado asignado</p>
+                    {puedeCrear && <Link href={route('perfiles.create')}>+ Crear perfil</Link>}
                 </div>
             )}
         </div>

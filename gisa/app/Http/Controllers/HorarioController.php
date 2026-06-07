@@ -19,19 +19,24 @@ class HorarioController extends Controller
         $allowed = ['inicio_turno', 'fin_turno', 'estado'];
         $sort = in_array($request->sort, $allowed) ? $request->sort : 'inicio_turno';
         $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
-    
-        $horarios = Horario::with('user.perfil')
-            ->orderBy($sort, $dir)
-            ->paginate(10)
-            ->appends($request->only('sort', 'dir'));
-    
+
+        $user = auth()->user();
+
+        $query = Horario::with('user.perfil')->orderBy($sort, $dir);
+
+        // Si no es admin ni gerente, filtra solo sus horarios
+        if (!in_array($user->role, ['admin', 'gerente'])) {
+            $query->where('user_id', $user->id);
+        }
+
+        $horarios = $query->paginate(10)->appends($request->only('sort', 'dir'));
+
         return Inertia::render('Horarios/Index', [
             'horarios' => $horarios,
             'sort'     => $sort,
             'dir'      => $dir,
         ]);
     }
-
     public function create(): Response
     {
         $users = User::with('perfil')->get();
@@ -51,8 +56,8 @@ class HorarioController extends Controller
         ]);
 
         $data = $request->only('user_id', 'estado');
-        $data['inicio_turno'] = Carbon::parse($request->inicio_turno);
-        $data['inicio_turno'] = Carbon::parse($request->inicio_turno);
+        $data['inicio_turno'] = Carbon::parse($request->inicio_turno, 'Europe/Madrid')->utc();
+        $data['fin_turno']    = Carbon::parse($request->fin_turno, 'Europe/Madrid')->utc();
 
         $horario = Horario::create($data);
 

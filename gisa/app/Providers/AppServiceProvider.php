@@ -22,15 +22,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (request()->isSecure() || str_contains(config('app.url'), 'https')) {
+    if (request()->isSecure() || 
+        request()->header('x-forwarded-proto') === 'https' ||
+        str_contains(config('app.url'), 'https')) {
         URL::forceScheme('https');
+        URL::forceRootUrl(config('app.url'));
     }
 
         Vite::prefetch(concurrency: 3);
 
         Carbon::macro('jsonSerialize', function () {
-        return $this->toIso8601String(); // "2025-05-28T11:00:00+02:00"
-        
-    });
+            return $this->toIso8601String();
+        });
     }
 }

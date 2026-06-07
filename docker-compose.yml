@@ -1,0 +1,46 @@
+services:
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gisa
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  app:
+    build: ./gisa
+    restart: unless-stopped
+    env_file: gisa/.env
+    environment:
+      DB_HOST: db
+    volumes:
+      - ./gisa:/var/www/html                          # bind mount del código fuente
+      - storage_data:/var/www/html/storage       # persiste storage de Laravel
+      - /var/www/html/vendor                     # vendor generado en el build, no sobreescribir
+      - /var/www/html/node_modules               # node_modules del build, no sobreescribir
+    depends_on:
+      db:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./gisa:/var/www/html:ro                       # mismo bind mount que app (solo lectura)
+    depends_on:
+      - app
+
+volumes:
+  db_data:
+  storage_data:

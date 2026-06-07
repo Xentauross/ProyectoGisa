@@ -20,7 +20,6 @@ use Inertia\Inertia;
 
 Route::get('/', WelcomeController::class)->name('home');
 
-
 Route::get('/register',  fn() => redirect('/login'))->name('register');
 Route::post('/register', fn() => redirect('/login'));
 
@@ -52,19 +51,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'inicio_turno' => 'nullable|date',
             'fin_turno'    => 'nullable|date|after_or_equal:inicio_turno',
         ]);
-        $horario->update($request->only('estado', 'inicio_turno', 'fin_turno'));
+        $horario->update([
+            'estado'       => $request->estado,
+            'inicio_turno' => $request->inicio_turno ? \Carbon\Carbon::parse($request->inicio_turno, 'Europe/Madrid')->utc() : null,
+            'fin_turno'    => $request->fin_turno    ? \Carbon\Carbon::parse($request->fin_turno,    'Europe/Madrid')->utc() : null,
+        ]);
         return back()->with('success', 'Turno actualizado.');
     })->name('mis-turnos.update');
 
-    // Perfil propio — cualquier usuario puede editar el suyo
+    // Editar perfil propio — cualquier rol autenticado
+    // El controller hace abort_if si intentas editar el de otro
     Route::get('perfiles/{perfil}/edit', [PerfilController::class, 'edit'])->name('perfiles.edit');
     Route::patch('perfiles/{perfil}',    [PerfilController::class, 'update'])->name('perfiles.update');
 });
 
 // ═══════════════════════════════════════════════════════
 // MESAS
-// CRUD completo : admin, gerente
-// Ver + editar  : metre, camarero
+// CRUD completo : admin, gerente, metre, camarero
 // ═══════════════════════════════════════════════════════
 
 Route::middleware(['auth', 'verified', 'role:admin,gerente,metre,camarero'])->group(function () {
@@ -73,8 +76,6 @@ Route::middleware(['auth', 'verified', 'role:admin,gerente,metre,camarero'])->gr
 
 // ═══════════════════════════════════════════════════════
 // PEDIDOS
-// CRUD completo + líneas : admin, gerente, metre
-// Ver + editar           : jefe_cocina, cocinero
 // ═══════════════════════════════════════════════════════
 
 Route::middleware(['auth', 'verified', 'role:admin,gerente,metre,jefe_cocina,cocinero,camarero'])->group(function () {
@@ -83,15 +84,24 @@ Route::middleware(['auth', 'verified', 'role:admin,gerente,metre,jefe_cocina,coc
     Route::delete('pedidos/{pedido}/lineas/{linea}', [PedidoController::class, 'removeLinea'])->name('pedidos.removeLinea');
 });
 
-
 // ═══════════════════════════════════════════════════════
 // PERFILES
-// CRUD completo    : admin, gerente
-// Ver + editar     : aux_administrativo
+// CRUD completo : admin, gerente, aux_administrativo
+// (editar propio perfil está en el grupo auth general)
 // ═══════════════════════════════════════════════════════
 
 Route::middleware(['auth', 'verified', 'role:admin,gerente,aux_administrativo'])->group(function () {
-    Route::resource('perfiles', PerfilController::class)->parameters(['perfiles' => 'perfil']);
+    Route::resource('perfiles', PerfilController::class)
+        ->parameters(['perfiles' => 'perfil'])
+        ->except(['edit', 'update']);
+});
+
+// ═══════════════════════════════════════════════════════
+// HORARIOS
+// ═══════════════════════════════════════════════════════
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('horarios', HorarioController::class)->only(['index']);
 });
 
 // ═══════════════════════════════════════════════════════
@@ -101,7 +111,7 @@ Route::middleware(['auth', 'verified', 'role:admin,gerente,aux_administrativo'])
 Route::middleware(['auth', 'verified', 'role:admin,gerente'])->group(function () {
     Route::resource('usuarios',     UsuarioController::class);
     Route::get('usuarios/crear',    [RegisteredUserController::class, 'create'])->name('usuarios.crear');
-    Route::resource('horarios',     HorarioController::class);
+    Route::resource('horarios',     HorarioController::class)->except(['index']);
     Route::resource('productos',    ProductoController::class);
     Route::resource('ingredientes', IngredienteController::class)->except(['show']);
 });

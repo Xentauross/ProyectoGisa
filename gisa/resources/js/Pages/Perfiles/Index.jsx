@@ -22,7 +22,7 @@ export default function Index({ auth, perfiles, sort, dir }) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="bg-white shadow rounded-lg overflow-hidden">
                         <div className="overflow-x-auto">
-                            <table className="w-full border-collapse">
+                            <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
                                 <thead className="bg-gray-50 text-left text-sm text-gray-600">
                                     <tr>
                                         {sh('nombre', 'Nombre completo')}
@@ -56,15 +56,26 @@ export default function Index({ auth, perfiles, sort, dir }) {
                                             </td>
                                         </tr>
                                     ))}
+                                    {perfiles.data.length === 0 && (
+                                        <tr><td colSpan={7} className="p-6 text-center text-gray-400 text-sm">No hay empleados registrados</td></tr>
+                                    )}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div className="mt-4 flex gap-2">
+                    <div className="mt-4 flex gap-2 flex-wrap">
                         {perfiles.links.map((link, i) => (
                             <Link key={i} href={link.url ?? '#'}
-                                className={`px-3 py-1 rounded border text-sm ${link.active ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'} ${!link.url ? 'opacity-40 pointer-events-none' : ''}`}
-                                dangerouslySetInnerHTML={{ __html: link.label }} />
+                                className={`px-3 py-1 rounded border text-sm transition-colors
+                                    ${link.active
+                                        ? 'bg-primary text-primary-content border-primary'
+                                        : 'bg-white text-gray-700 border-gray-300 hover:bg-primary hover:text-primary-content hover:border-primary'}
+                                    ${!link.url ? 'opacity-40 pointer-events-none' : ''}`}
+                                dangerouslySetInnerHTML={{
+                                    __html: link.label
+                                        .replace('Previous', 'Anterior')
+                                        .replace('Next', 'Siguiente')
+                                }} />
                         ))}
                     </div>
                 </div>

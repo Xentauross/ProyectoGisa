@@ -115,7 +115,7 @@ export default function Edit({ auth, perfil, users }) {
 
                             <div className="flex justify-end pt-2">
                                 <button type="submit" disabled={processing}
-                                    className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50 text-sm font-medium">
+                                    className="btn btn-primary ms-auto">
                                     {processing ? 'Guardando...' : 'Guardar cambios'}
                                 </button>
                             </div>

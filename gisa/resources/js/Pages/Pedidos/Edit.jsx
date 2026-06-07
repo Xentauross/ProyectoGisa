@@ -82,17 +82,17 @@ export default function Edit({ auth, pedido, mesas, camareros, productos }) {
                             </div>
 
                             <button type="submit" disabled={processing}
-                                className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50 text-sm">
+                                className="btn btn-primary ms-auto">
                                 Actualizar pedido
                             </button>
                         </form>
                     </div>
 
                     {/* Líneas del pedido */}
-                    <div className="bg-white shadow rounded-lg p-6">
+                    <div className="overflow-x-auto bg-white shadow rounded-lg p-6">
                         <h2 className="text-base font-medium text-gray-700 mb-4">Productos del pedido</h2>
 
-                        <table className="w-full border-collapse mb-6 text-sm">
+                        <table className="w-full border-collapse text-sm">
                             <thead className="bg-gray-50 text-gray-600">
                                 <tr>
                                     <th className="p-3 text-left">Producto</th>
@@ -159,7 +159,7 @@ export default function Edit({ auth, pedido, mesas, camareros, productos }) {
                             </Campo>
 
                             <button type="submit" disabled={lineaForm.processing}
-                                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 text-sm">
+                                className="btn btn-primary ms-auto">
                                 Añadir
                             </button>
                         </form>

@@ -12,17 +12,19 @@ use Inertia\Response;
 
 class PerfilController extends Controller
 {
+    private const ROLES_GESTION = ['admin', 'gerente', 'aux_administrativo'];
+
     public function index(Request $request): Response
     {
-        $allowed = ['nombre', 'apellido1', 'dni', 'telefono', 'num_seguridad_social',];
+        $allowed = ['nombre', 'apellido1', 'dni', 'telefono', 'num_seguridad_social'];
         $sort = in_array($request->sort, $allowed) ? $request->sort : 'nombre';
         $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
-    
+
         $perfiles = Perfil::with('user')
             ->orderBy($sort, $dir)
             ->paginate(10)
             ->appends($request->only('sort', 'dir'));
-    
+
         return Inertia::render('Perfiles/Index', [
             'perfiles' => $perfiles,
             'sort'     => $sort,
@@ -32,7 +34,8 @@ class PerfilController extends Controller
 
     public function create(): Response
     {
-        // Solo usuarios que aún no tienen perfil
+        abort_if(!in_array(auth()->user()->role, self::ROLES_GESTION), 403);
+
         $users = User::doesntHave('perfil')->orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Perfiles/Create', [
@@ -42,6 +45,8 @@ class PerfilController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        abort_if(!in_array(auth()->user()->role, self::ROLES_GESTION), 403);
+
         $request->validate([
             'user_id'              => 'required|integer|exists:users,id|unique:perfiles,user_id',
             'nombre'               => 'required|string|max:40',
@@ -63,17 +68,16 @@ class PerfilController extends Controller
 
     public function show(Perfil $perfil): Response
     {
-        $perfil->load('user');  // carga la relación en el modelo
+        $perfil->load('user');
         return Inertia::render('Perfiles/Show', [
-            'perfil' => $perfil,  // ahora manda el modelo ya con la relación cargada
+            'perfil' => $perfil,
         ]);
     }
 
     public function edit(Perfil $perfil): Response
     {
-        // Permite al propio usuario o a admin/gerente
         abort_if(
-            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente', 'aux_administrativo']),
+            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, self::ROLES_GESTION),
             403
         );
 
@@ -87,9 +91,8 @@ class PerfilController extends Controller
 
     public function update(Request $request, Perfil $perfil): RedirectResponse
     {
-        // Permite al propio usuario o a admin/gerente
         abort_if(
-            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente', 'aux_administrativo']),
+            $perfil->user_id !== auth()->id() && !in_array(auth()->user()->role, self::ROLES_GESTION),
             403
         );
 
@@ -105,19 +108,19 @@ class PerfilController extends Controller
             'cuenta_bancaria'      => ['required', 'string', 'max:34'],
         ]);
 
-        // Usa only() sin user_id para que nunca se pueda cambiar
         $perfil->update($request->except('user_id'));
 
-        // Redirige según quién actualizó
-        $destino = $perfil->user_id === auth()->id() && !in_array(auth()->user()->role, ['admin', 'gerente', 'aux_administrativo'])
+        $destino = $perfil->user_id === auth()->id() && !in_array(auth()->user()->role, self::ROLES_GESTION)
             ? redirect()->route('dashboard')->with('success', 'Perfil actualizado correctamente.')
             : redirect()->route('perfiles.index')->with('success', 'Perfil actualizado correctamente.');
 
         return $destino;
-    }   
+    }
 
     public function destroy(Perfil $perfil): RedirectResponse
     {
+        abort_if(!in_array(auth()->user()->role, self::ROLES_GESTION), 403);
+
         $perfil->delete();
 
         return redirect()->route('perfiles.index')

@@ -67,7 +67,7 @@ export default function Dashboard({ auth, miPerfil, misHorarios = [] }) {
                     <ProfileCard
                         miPerfil={miPerfil}
                         perfilId={perfilId}
-                    />
+                        role={auth.user.role} />
 
                     <CalendarCard
                         mesVista={calendario.mesVista}
