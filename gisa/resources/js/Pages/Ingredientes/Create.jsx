@@ -51,7 +51,7 @@ export default function Create({ auth }) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50 text-sm font-medium"
+                                className="btn btn-primary ms-auto"
                             >
                                 Guardar ingrediente
                             </button>

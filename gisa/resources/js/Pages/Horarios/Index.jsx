@@ -24,11 +24,9 @@ export default function Index({ auth, horarios, sort, dir }) {
         <AuthenticatedLayout user={auth.user}
             header={
                 <div className="flex justify-between items-center">
-                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        Horarios
-                    </h2>
-                    <Link href={route('horarios.create')} className="btn btn-primary btn-sm"
-                    >Nuevo horario
+                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">Horarios</h2>
+                    <Link href={route('horarios.create')} className="btn btn-primary btn-sm">
+                        Nuevo horario
                     </Link>
                 </div>
             }>
@@ -82,8 +80,16 @@ export default function Index({ auth, horarios, sort, dir }) {
                     <div className="mt-4 flex gap-2 flex-wrap">
                         {horarios.links.map((link, i) => (
                             <Link key={i} href={link.url ?? '#'}
-                                className={`px-3 py-1 rounded border text-sm ${link.active ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'} ${!link.url ? 'opacity-40 pointer-events-none' : ''}`}
-                                dangerouslySetInnerHTML={{ __html: link.label }} />
+                                className={`px-3 py-1 rounded border text-sm transition-colors
+                                    ${link.active
+                                        ? 'bg-primary text-primary-content border-primary'
+                                        : 'bg-white text-gray-700 border-gray-300 hover:bg-primary hover:text-primary-content hover:border-primary'}
+                                    ${!link.url ? 'opacity-40 pointer-events-none' : ''}`}
+                                dangerouslySetInnerHTML={{
+                                    __html: link.label
+                                        .replace('Previous', 'Anterior')
+                                        .replace('Next', 'Siguiente')
+                                }} />
                         ))}
                     </div>
                 </div>

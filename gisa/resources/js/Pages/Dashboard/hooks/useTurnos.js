@@ -22,8 +22,8 @@ export function useTurnos(horarios) {
         [horarios],
     );
 
-    const abrirTurno  = (turno) => setTurnoActivo(turno);
-    const cerrarTurno = ()      => setTurnoActivo(null);
+    const abrirTurno = (turno) => setTurnoActivo(turno);
+    const cerrarTurno = () => setTurnoActivo(null);
 
     function guardarTurno(e) {
         e.preventDefault();
@@ -31,9 +31,9 @@ export function useTurnos(horarios) {
         router.patch(
             route('mis-turnos.update', turnoActivo.id),
             {
-                estado:       form.estado.value,
-                inicio_turno: form.inicio_turno.value || null,
-                fin_turno:    form.fin_turno.value    || null,
+                estado: form.estado.value,
+                inicio_turno: form.inicio_turno.value ? form.inicio_turno.value + ':00' : null,
+                fin_turno: form.fin_turno.value ? form.fin_turno.value + ':00' : null,
             },
             {
                 preserveScroll: true,

@@ -45,7 +45,7 @@ export default function Edit({ auth, mesa }) {
                             </Campo>
 
                             <button type="submit" disabled={processing}
-                                className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50 text-sm">
+                                className="btn btn-primary ms-auto">
                                 Actualizar
                             </button>
                         </form>

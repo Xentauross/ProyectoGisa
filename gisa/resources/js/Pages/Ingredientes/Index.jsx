@@ -19,8 +19,7 @@ export default function Index({ auth, ingredientes, sort, dir }) {
             header={
                 <div className="flex justify-between items-center">
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">Ingredientes</h2>
-                    <Link href={route('ingredientes.create')}
-                        className="btn btn-primary btn-sm">
+                    <Link href={route('ingredientes.create')} className="btn btn-primary btn-sm">
                         Nuevo ingrediente
                     </Link>
                 </div>
@@ -29,36 +28,46 @@ export default function Index({ auth, ingredientes, sort, dir }) {
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="bg-white shadow rounded-lg overflow-hidden">
-                        <table className="w-full border-collapse">
-                            <thead className="bg-gray-50 text-left text-sm text-gray-600">
-                                <tr>
-                                    {sh('nombre', 'Nombre')}
-                                    {sh('productos_count', 'Nº productos')}
-                                    <th className="p-4">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {ingredientes.data.map((ing) => (
-                                    <tr key={ing.id} className="border-t hover:bg-gray-50">
-                                        <td className="p-4 font-medium">{ing.nombre}</td>
-                                        <td className="p-4 text-gray-500">{ing.productos_count}</td>
-                                        <td className="p-4 flex gap-3">
-                                            <Link href={route('ingredientes.edit', ing.id)} className="text-blue-600 hover:underline text-sm">Editar</Link>
-                                            <button onClick={() => eliminar(ing.id)} className="text-red-600 hover:underline text-sm">Eliminar</button>
-                                        </td>
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse" style={{ minWidth: '400px' }}>
+                                <thead className="bg-gray-50 text-left text-sm text-gray-600">
+                                    <tr>
+                                        {sh('nombre', 'Nombre')}
+                                        {sh('productos_count', 'Nº productos')}
+                                        <th className="p-4">Acciones</th>
                                     </tr>
-                                ))}
-                                {ingredientes.data.length === 0 && (
-                                    <tr><td colSpan={3} className="p-6 text-center text-gray-400 text-sm">No hay ingredientes todavía</td></tr>
-                                )}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {ingredientes.data.map((ing) => (
+                                        <tr key={ing.id} className="border-t hover:bg-gray-50">
+                                            <td className="p-4 font-medium">{ing.nombre}</td>
+                                            <td className="p-4 text-gray-500">{ing.productos_count}</td>
+                                            <td className="p-4 flex gap-3">
+                                                <Link href={route('ingredientes.edit', ing.id)} className="text-blue-600 hover:underline text-sm">Editar</Link>
+                                                <button onClick={() => eliminar(ing.id)} className="text-red-600 hover:underline text-sm">Eliminar</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {ingredientes.data.length === 0 && (
+                                        <tr><td colSpan={3} className="p-6 text-center text-gray-400 text-sm">No hay ingredientes todavía</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div className="mt-4 flex gap-2">
+                    <div className="mt-4 flex gap-2 flex-wrap">
                         {ingredientes.links.map((link, i) => (
                             <Link key={i} href={link.url ?? '#'}
-                                className={`px-3 py-1 rounded border text-sm ${link.active ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'} ${!link.url ? 'opacity-40 pointer-events-none' : ''}`}
-                                dangerouslySetInnerHTML={{ __html: link.label }} />
+                                className={`px-3 py-1 rounded border text-sm transition-colors
+                                    ${link.active
+                                        ? 'bg-primary text-primary-content border-primary'
+                                        : 'bg-white text-gray-700 border-gray-300 hover:bg-primary hover:text-primary-content hover:border-primary'}
+                                    ${!link.url ? 'opacity-40 pointer-events-none' : ''}`}
+                                dangerouslySetInnerHTML={{
+                                    __html: link.label
+                                        .replace('Previous', 'Anterior')
+                                        .replace('Next', 'Siguiente')
+                                }} />
                         ))}
                     </div>
                 </div>

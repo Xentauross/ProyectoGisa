@@ -87,6 +87,9 @@
     letter-spacing: .06em;
     text-transform: uppercase;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
 }
 
 /* ── Card genérica ───────────────────────────────────────── */
@@ -455,4 +458,12 @@
     display: flex;
     gap: 10px;
     margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+    .dashb-badge-rol {
+        font-size: .62rem;
+        padding: 4px 10px;
+        letter-spacing: .04em;
+    }
 }

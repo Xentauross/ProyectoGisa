@@ -17,9 +17,11 @@ export function colorEstado(estado) {
 export function fmtDatetimeLocal(iso) {
     if (!iso) return '';
     const d = new Date(iso);
-    // Convertir a hora local de Madrid para el input
-    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
-    return local.toISOString().slice(0, 16);
+    return new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'Europe/Madrid',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit',
+    }).format(d).replace(' ', 'T');
 }
 
 /**
