@@ -25,71 +25,74 @@ export default function Login({ status, canResetPassword }) {
             <Head title="Iniciar sesión" />
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <div className="mb-4 text-sm font-medium text-success">
                     {status}
                 </div>
             )}
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Usuario" />
-
+            <form onSubmit={submit} className="space-y-4">
+                <div className="form-control">
+                    <InputLabel htmlFor="name" value="Usuario" className="label-text text-base-content font-semibold" />
                     <TextInput
                         id="name"
                         type="text"
                         name="name"
                         value={data.name}
-                        className="mt-1 block w-full"
+                        className="input input-bordered w-full bg-base-200 border-primary/30 focus:border-primary focus:ring-primary text-base-content mt-1"
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('name', e.target.value)}
                     />
-
-                    <InputError message={errors.name} className="mt-2" />
+                    <InputError message={errors.name} className="mt-1 text-error text-xs" />
                 </div>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Contraseña" />
-
+                <div className="form-control">
+                    <InputLabel htmlFor="password" value="Contraseña" className="label-text text-base-content font-semibold" />
                     <TextInput
                         id="password"
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className="input input-bordered w-full bg-base-200 border-primary/30 focus:border-primary focus:ring-primary text-base-content mt-1"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
-
-                    <InputError message={errors.password} className="mt-2" />
+                    <InputError message={errors.password} className="mt-1 text-error text-xs" />
                 </div>
 
-                <div className="mt-4 block">
-                    <label className="flex items-center">
+                <div className="form-control">
+                    <label className="flex items-center gap-2 cursor-pointer">
                         <Checkbox
                             name="remember"
                             checked={data.remember}
                             onChange={(e) => setData('remember', e.target.checked)}
+                            className="checkbox checkbox-primary checkbox-sm"
                         />
-                        <span className="ms-2 text-sm text-gray-600">
+                        <span className="text-sm text-base-content/70">
                             Recordarme
                         </span>
                     </label>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
+                <div className="flex items-center justify-between pt-2">
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="text-sm text-primary hover:text-primary-focus underline underline-offset-2 transition-colors"
                         >
                             ¿Olvidaste tu contraseña?
                         </Link>
                     )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    <button
+                        type="submit"
+                        disabled={processing}
+                        className="btn btn-primary ms-auto"
+                    >
+                        {processing ? (
+                            <span className="loading loading-spinner loading-sm" />
+                        ) : null}
                         Entrar
-                    </PrimaryButton>
+                    </button>
                 </div>
             </form>
         </GuestLayout>

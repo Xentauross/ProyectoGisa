@@ -50,7 +50,7 @@ export default function Index({ auth, perfiles, sort, dir }) {
                                                     <Link href={route('perfiles.show', perfil.id)} className="text-gray-500 hover:underline">Ver</Link>
                                                     <Link href={route('perfiles.edit', perfil.id)} className="text-blue-600 hover:underline">Editar</Link>
                                                     {['admin', 'gerente'].includes(auth.user.role) && (
-                                                        <Link href={route('perfiles.destroy', perfil.id)} className="text-red-600 hover:underline">Eliminar</Link>
+                                                        <button onClick={() => eliminar(perfil.id)} className="text-red-600 hover:underline">Eliminar</button>
                                                     )}
                                                 </div>
                                             </td>

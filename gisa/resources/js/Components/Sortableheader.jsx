@@ -1,4 +1,3 @@
-// resources/js/Components/SortableHeader.jsx
 import { router, usePage } from '@inertiajs/react';
 
 /**

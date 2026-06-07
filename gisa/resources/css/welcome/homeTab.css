@@ -1,5 +1,5 @@
 /*
- * homeTab.css — usa variables CSS para light/dark mode automático
+ * homeTab.css — variables fijas, siempre tema oscuro
  */
 
 .ht-root {
@@ -11,7 +11,7 @@
     font-size: .7rem;
     text-transform: uppercase;
     letter-spacing: .12em;
-    color: var(--color-text-tertiary);
+    color: var(--c-text-subtle);
     margin: 0 0 6px;
 }
 
@@ -19,14 +19,14 @@
     font-family: 'Instrument Serif', serif;
     font-size: 2rem;
     font-weight: 400;
-    color: var(--color-text-primary);
+    color: var(--c-text);
     margin: 0 0 10px;
     line-height: 1.15;
 }
 
 .ht-slogan {
     font-size: .88rem;
-    color: var(--color-text-secondary);
+    color: var(--c-text-muted);
     line-height: 1.7;
     margin: 0 0 1.25rem;
     max-width: 520px;
@@ -46,9 +46,9 @@
     font-size: .72rem;
     padding: 4px 12px;
     border-radius: 999px;
-    border: 1px solid var(--color-border-secondary);
-    color: var(--color-text-secondary);
-    background: var(--color-background-secondary);
+    border: 1px solid var(--c-border);
+    color: var(--c-text-muted);
+    background: var(--c-sidebar);
 }
 
 /* Info rápida */
@@ -60,7 +60,7 @@
 }
 
 .ht-info-card {
-    background: var(--color-background-secondary);
+    background: var(--c-sidebar);
     border-radius: 12px;
     padding: 14px 16px;
 }
@@ -75,14 +75,14 @@
     font-size: .67rem;
     text-transform: uppercase;
     letter-spacing: .08em;
-    color: var(--color-text-tertiary);
+    color: var(--c-text-subtle);
     margin: 0 0 2px;
 }
 
 .ht-info-valor {
     font-size: .88rem;
     font-weight: 500;
-    color: var(--color-text-primary);
+    color: var(--c-text);
     margin: 0;
 }
 
@@ -101,8 +101,8 @@
 }
 
 .ht-rank-card {
-    background: var(--color-background-primary);
-    border: 1px solid var(--color-border-tertiary);
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
     border-radius: 16px;
     padding: 18px 20px;
 }
@@ -110,13 +110,13 @@
 .ht-rank-title {
     font-size: .82rem;
     font-weight: 500;
-    color: var(--color-text-primary);
+    color: var(--c-text);
     margin: 0 0 2px;
 }
 
 .ht-rank-sub {
     font-size: .7rem;
-    color: var(--color-text-tertiary);
+    color: var(--c-text-subtle);
     margin: 0 0 14px;
     text-transform: uppercase;
     letter-spacing: .06em;
@@ -133,7 +133,7 @@
     align-items: center;
     gap: 10px;
     padding: 7px 0;
-    border-bottom: 1px solid var(--color-border-tertiary);
+    border-bottom: 1px solid var(--c-border);
 }
 
 .ht-rank-item:last-child {
@@ -144,21 +144,21 @@
     width: 18px;
     font-size: .72rem;
     font-weight: 500;
-    color: var(--color-text-tertiary);
+    color: var(--c-text-subtle);
     flex-shrink: 0;
     text-align: center;
 }
 
 .ht-rank-pos--1 {
-    color: var(--color-text-warning);
+    color: var(--c-brand);
 }
 
 .ht-rank-pos--2 {
-    color: var(--color-text-secondary);
+    color: var(--c-text-muted);
 }
 
 .ht-rank-pos--3 {
-    color: var(--color-text-warning);
+    color: var(--c-brand);
     opacity: .6;
 }
 
@@ -169,7 +169,7 @@
 
 .ht-rank-nombre {
     font-size: .8rem;
-    color: var(--color-text-primary);
+    color: var(--c-text);
     display: block;
     white-space: nowrap;
     overflow: hidden;
@@ -179,7 +179,7 @@
 .ht-rank-bar-wrap {
     width: 100%;
     height: 3px;
-    background: var(--color-border-tertiary);
+    background: var(--c-border);
     border-radius: 2px;
     margin-top: 4px;
 }
@@ -191,28 +191,20 @@
 }
 
 .ht-rank-bar--rec {
-    background: var(--color-text-success);
+    background: #4caf50;
 }
 
 .ht-rank-bar--sold {
-    background: var(--color-text-warning);
+    background: var(--c-brand);
 }
 
 .ht-rank-meta {
     font-size: .68rem;
-    color: var(--color-text-tertiary);
+    color: var(--c-text-subtle);
     flex-shrink: 0;
 }
 
 /* Sobre el restaurante */
-.ht-about {
-    background: var(--color-background-primary);
-    border: 1px solid var(--color-border-tertiary);
-    border-radius: 16px;
-    padding: 20px 22px;
-    margin-bottom: 1.5rem;
-}
-
 .ht-about-header {
     display: flex;
     justify-content: space-between;
@@ -224,13 +216,13 @@
 .ht-about-title {
     font-size: .9rem;
     font-weight: 500;
-    color: var(--color-text-primary);
+    color: var(--c-text);
     margin: 0 0 4px;
 }
 
 .ht-about-address {
     font-size: .72rem;
-    color: var(--color-text-tertiary);
+    color: var(--c-text-subtle);
     margin: 0;
 }
 
@@ -238,16 +230,16 @@
     font-size: .68rem;
     padding: 3px 10px;
     border-radius: 999px;
-    background: var(--color-background-success);
-    color: var(--color-text-success);
-    border: 1px solid var(--color-border-success);
+    background: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.3);
     white-space: nowrap;
     flex-shrink: 0;
 }
 
 .ht-about-bio {
     font-size: .83rem;
-    color: var(--color-text-secondary);
+    color: var(--c-text-muted);
     line-height: 1.7;
     margin: 0 0 16px;
 }
@@ -257,7 +249,7 @@
     gap: 24px;
     flex-wrap: wrap;
     padding-top: 14px;
-    border-top: 1px solid var(--color-border-tertiary);
+    border-top: 1px solid var(--c-border);
     list-style: none;
     margin: 0;
     padding-left: 0;
@@ -271,28 +263,21 @@
 .ht-stat-val {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--c-text);
 }
 
 .ht-stat-label {
     font-size: .67rem;
     text-transform: uppercase;
     letter-spacing: .07em;
-    color: var(--color-text-tertiary);
+    color: var(--c-text-subtle);
 }
 
 /* Horarios */
-.ht-horarios {
-    background: var(--color-background-primary);
-    border: 1px solid var(--color-border-tertiary);
-    border-radius: 16px;
-    padding: 18px 20px;
-}
-
 .ht-horarios-title {
     font-size: .82rem;
     font-weight: 500;
-    color: var(--color-text-primary);
+    color: var(--c-text);
     margin: 0 0 12px;
 }
 
@@ -307,7 +292,7 @@
     justify-content: space-between;
     font-size: .8rem;
     padding: 6px 0;
-    border-bottom: 1px solid var(--color-border-tertiary);
+    border-bottom: 1px solid var(--c-border);
 }
 
 .ht-horario-row:last-child {
@@ -315,18 +300,17 @@
 }
 
 .ht-horario-dia {
-    color: var(--color-text-secondary);
+    color: var(--c-text-muted);
 }
 
 .ht-horario-hora {
-    color: var(--color-text-primary);
+    color: var(--c-text);
     font-weight: 500;
 }
 
 .ht-horario-cerrado {
-    color: var(--color-text-tertiary);
+    color: var(--c-text-subtle);
 }
-
 
 /* ── Nota en horarios ── */
 .ht-horarios-nota {
@@ -372,7 +356,6 @@
 .info-horarios {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    /* 66% y 33% aprox */
     gap: var(--sp-lg);
     margin-top: var(--sp-xl);
 }
