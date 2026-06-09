@@ -18,15 +18,21 @@ class UsuarioController extends Controller
 {
 public function index(Request $request): Response
     {
-        // Añadimos lista de columnas permitidas
+        // Whitelist de columnas por las que se puede ordenar.
+        // Si el usuario manipula la URL con una columna que no está aquí,
+        // se usa 'created_at' por defecto. SEGURIDAD: evita SQL injection.
         $allowed = ['name', 'email', 'role', 'created_at', 'nombre'];
         $sort = in_array($request->sort, $allowed) ? $request->sort : 'created_at';
         $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
     
-        // Preparamos la consulta base uniendo la tabla perfiles
+        // Preparamos la consulta base.
+        // with('perfil') hace eager loading: carga el perfil de cada usuario
+        // en UNA sola query extra (evita el problema N+1).
+        // leftJoin con 'perfiles' nos permite ordenar por columnas del perfil
+        // (como 'nombre') aunque estén en otra tabla.
         $query = User::with('perfil')
             ->leftJoin('perfiles', 'users.id', '=', 'perfiles.user_id')
-            ->select('users.*'); //Elegimos solo users.* para que el 'id' de perfil no machaque al 'id' de usuario
+            ->select('users.*');
     
         // Aplicamos el orden dependiendo de si es un campo de perfil o de usuario
         if ($sort === 'nombre') {
@@ -47,6 +53,8 @@ public function index(Request $request): Response
     }
     public function create(): Response
     {
+        // Pasamos los roles disponibles para rellenar el <select>
+        // self::roles() llama al método privado de esta misma clase
         return Inertia::render('Usuarios/Create', [
             'roles' => self::roles(),
         ]);
@@ -54,6 +62,11 @@ public function index(Request $request): Response
 
 public function store(Request $request): RedirectResponse
 {
+    // VALIDACIÓN: si alguna regla falla, Laravel redirige automáticamente
+    // al formulario con los errores. El código de abajo NO se ejecuta.
+
+    // Rule::in() valida que el valor esté entre las claves del array de roles.
+    // Así evitamos que alguien envíe un rol inventado.
     $request->validate([
         'nombre'               => 'required|string|max:40',
         'apellido1'            => 'required|string|max:40',
@@ -68,12 +81,19 @@ public function store(Request $request): RedirectResponse
         'role'                 => ['required', Rule::in(array_keys(self::roles()))],
     ]);
 
+    // Extraemos los datos que necesitamos para generar el username
     $nombre    = $request->nombre;
     $apellido1 = $request->apellido1;
     $apellido2 = $request->apellido2 ?? '';
     $dni       = $request->dni;
 
+    // Generamos el username siguiendo la lógica del método privado generarUsername()
+    // Ejemplo: nombre=Juan, apellido1=García, apellido2=López, dni=12345678A
+    // → JGAR López→LOP 678 → JGARLÓ...
     $username         = self::generarUsername($nombre, $apellido1, $apellido2, $dni);
+
+    // Generamos una contraseña temporal aleatoria de 10 caracteres
+    // Str::random() genera letras y números aleatorios. Ej: "xK9mPqRt2N"
     $passwordTemporal = Str::random(10);
 
     // ── Crear usuario y perfil en una transacción ──────────────────────
@@ -85,6 +105,7 @@ public function store(Request $request): RedirectResponse
             'role'     => $request->role,
         ]);
 
+        // Creamos el registro en la tabla 'perfiles', vinculado al usuario por user_id
         Perfil::create([
             'user_id'              => $usuario->id,
             'nombre'               => $nombre,
@@ -98,10 +119,15 @@ public function store(Request $request): RedirectResponse
             'cuenta_bancaria'      => $request->cuenta_bancaria,
         ]);
 
+        // Devolvemos el usuario creado para usarlo fuera de la transacción
         return $usuario;
     });
 
-    // ── Enviar email (fallo no crítico) ────────────────────────────────
+    // ── ENVÍO DE EMAIL (fuera de la transacción) ──────────
+    // El email se envía DESPUÉS de que la transacción haya terminado con éxito.
+    // Si el email falla, NO queremos deshacer la creación del usuario.
+    // Por eso usamos try/catch: si falla el email, registramos el error en el log
+    // pero el usuario queda creado igualmente.
     $emailEnviado = true;
     try {
         Mail::to($usuario->email)
@@ -111,16 +137,23 @@ public function store(Request $request): RedirectResponse
         \Log::error("Email bienvenida fallido para {$usuario->email}: " . $e->getMessage());
     }
 
+    // Mensaje de éxito diferente según si el email se envió o no.
+    // Si no se envió, mostramos la contraseña temporal en el flash message
+    // para que el admin se la pueda dar manualmente al empleado.
     $mensaje = $emailEnviado
         ? "Usuario {$username} creado. Credenciales enviadas a {$usuario->email}."
         : "Usuario {$username} creado, pero el email no pudo enviarse. Contraseña temporal: {$passwordTemporal}";
 
+    // Redirigimos al listado con el mensaje flash de éxito
+    // with('success', ...) guarda el mensaje en la sesión una sola vez
     return redirect()->route('usuarios.index')->with('success', $mensaje);
     }
 
     public function show(User $usuario): Response
     {
         return Inertia::render('Usuarios/Show', [
+            // load() hace lazy loading: carga perfil y horarios en este momento.
+            // Equivale a hacer las queries ahora en vez de al acceder a la propiedad.
             'usuario' => $usuario->load('perfil', 'horarios'),
         ]);
     }
@@ -133,6 +166,9 @@ public function store(Request $request): RedirectResponse
         ]);
     }
 
+    // NOTA: en edición solo se permite cambiar email y rol.
+    // Los datos del perfil (nombre, DNI, etc.) se editan
+    // desde PerfilController, no desde aquí.
     public function update(Request $request, User $usuario): RedirectResponse
     {
         $request->validate([
@@ -159,8 +195,29 @@ public function store(Request $request): RedirectResponse
             ->with('success', 'Usuario eliminado correctamente.');
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════
+    // MÉTODOS AUXILIARES PRIVADOS
+    // Son 'private static' porque:
+    //   - private: solo se usan dentro de este controlador
+    //   - static: no necesitan instanciar la clase (se llaman con self::)
+    // ══════════════════════════════════════════════════════════
 
+    /**
+     * Genera un username único a partir de los datos personales.
+     *
+     * Fórmula:
+     *   - 1ª letra del nombre (mayúscula)
+     *   - 3 primeras letras del apellido1 (mayúsculas)
+     *   - 3 primeras letras del apellido2 (mayúsculas)
+     *   - últimos 3 caracteres del DNI (posiciones 5,6,7 → ej: "678" de "12345678A")
+     *
+     * Ejemplo:
+     *   nombre="Juan", apellido1="García", apellido2="López", dni="12345678A"
+     *   → J + GAR + LÓP + 678 = "JGARLÓP678"
+     *
+     * Si el username ya existe en la BD (dos personas con los mismos datos),
+     * añade un número incremental: "JGARLÓP6781", "JGARLÓP6782", etc.
+     */
     private static function generarUsername(string $nombre, string $apellido1, string $apellido2, string $dni): string
     {
         // 1ª letra del nombre + 3 primeras del apellido1 + 3 primeras del apellido2 + 3 últimos numeros del DNI
@@ -171,7 +228,8 @@ public function store(Request $request): RedirectResponse
 
         $username = $parte1 . $parte2 . $parte3 . $parte4;
 
-        // Si el username ya existe, añadir un número incremental
+        // Comprobamos si el username ya existe en la BD.
+        // Si existe, añadimos un número hasta encontrar uno libre.
         $base  = $username;
         $i     = 1;
         while (User::where('name', $username)->exists()) {
@@ -182,6 +240,14 @@ public function store(Request $request): RedirectResponse
         return $username;
     }
 
+    /**
+     * Lista de roles disponibles en la aplicación.
+     * Formato: ['clave' => 'Etiqueta visible']
+     *
+     * Se usa en:
+     *   - Los formularios de create/edit (para el <select> de roles)
+     *   - La validación (Rule::in(array_keys(...))) para asegurar que el rol sea válido
+     */
     private static function roles(): array
     {
         return [

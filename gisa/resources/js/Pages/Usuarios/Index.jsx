@@ -2,11 +2,15 @@ import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import SortableHeader from '@/Components/SortableHeader';
 
+// Mapa de clave de rol → etiqueta visible.
 const ROLES = {
     admin: 'Administrador', gerente: 'Gerente', metre: 'Metre',
     camarero: 'Camarero', jefe_cocina: 'Jefe de cocina',
     cocinero: 'Cocinero', aux_administrativo: 'Aux. Administrativo',
 };
+
+// Clases CSS de Tailwind para cada badge de rol.
+// Cada rol tiene su propio color de fondo/texto para diferenciarlo visualmente.
 const BADGE = {
     admin: 'bg-red-100 text-red-700', gerente: 'bg-purple-100 text-purple-700',
     metre: 'bg-blue-100 text-blue-700', camarero: 'bg-sky-100 text-sky-700',
@@ -14,12 +18,26 @@ const BADGE = {
     aux_administrativo: 'bg-gray-100 text-gray-600',
 };
 
+/**
+ * Props desde UsuarioController@index():
+ *   auth     → usuario logueado
+ *   usuarios → objeto de paginación { data: [...], links: [...], total, ... }
+ *   sort     → columna de ordenación actual ('email', 'nombre', etc.)
+ *   dir      → dirección de orden ('asc' o 'desc')
+ */
 export default function Index({ auth, usuarios, sort, dir }) {
+
+    // Función para eliminar un usuario con confirmación previa
     function eliminar(id, nombre) {
         if (!confirm(`¿Eliminar al usuario ${nombre}?`)) return;
+        // router.delete() hace una petición DELETE a la ruta indicada (Inertia)
+        // equivale a un formulario con method="DELETE"
         router.delete(route('usuarios.destroy', id));
     }
 
+    // Helper para generar cabeceras ordenables.
+    // SortableHeader es un componente que muestra el label y al hacer clic
+    // navega a la misma ruta con ?sort=field&dir=asc/desc (invirtiendo si ya está activo)
     const sh = (field, label) => (
         <SortableHeader field={field} currentSort={sort} currentDir={dir} routeName="usuarios.index">
             {label}
@@ -31,6 +49,7 @@ export default function Index({ auth, usuarios, sort, dir }) {
             header={
                 <div className="flex justify-between items-center">
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">Usuarios</h2>
+                    {/* El botón "Nuevo usuario" solo aparece para admin y gerente */}
                     {['admin', 'gerente'].includes(auth.user.role) && (
                         <Link href={route('usuarios.create')} className="btn btn-primary btn-sm">
                             Nuevo usuario
