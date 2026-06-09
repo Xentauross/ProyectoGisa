@@ -16,6 +16,8 @@ import TurnoModal from './Dashboard/components/TurnoModal';
 // Utils
 import { getIniciales } from './Dashboard/utils';
 
+import '/resources/css/dashboard/dashboard.css';
+
 /**
  * Dashboard principal del empleado.
  *

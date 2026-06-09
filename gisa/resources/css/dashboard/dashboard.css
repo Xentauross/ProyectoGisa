@@ -1,0 +1,469 @@
+/*
+ * dashboard.css
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
+
+/* ── Layout raíz ─────────────────────────────────────────── */
+.db-root {
+    font-family: 'Sora', sans-serif;
+    background: rgba(164, 177, 173, 0.596);
+    min-height: 100vh;
+    padding: 24px 32px 48px;
+    border-radius: 5%;
+}
+
+@media (min-width: 640px) {
+    .db-root {
+        padding: 32px 24px 64px;
+    }
+}
+
+.db-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+    .db-grid {
+        grid-template-columns: 300px 1fr;
+    }
+}
+
+/* ── Card bienvenida ─────────────────────────────────────── */
+.dashb-card-bienvenida {
+    background: #0f172a;
+    border-radius: 20px;
+    padding: 28px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    grid-column: 1 / -1;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.dashb-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0d9488, #0f766e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.dashb-bienvenida-texto h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: #fafaf9;
+    margin-bottom: 2px;
+}
+
+.dashb-bienvenida-texto p {
+    font-size: .78rem;
+    color: rgba(250, 250, 249, .45);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}
+
+.dashb-badge-rol {
+    margin-left: auto;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(13, 148, 136, .15);
+    border: 1px solid rgba(13, 148, 136, .3);
+    color: #5eead4;
+    font-size: .72rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+/* ── Card genérica ───────────────────────────────────────── */
+.dashb-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06), 0 4px 16px rgba(0, 0, 0, .04);
+}
+
+.dashb-card-label {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #a8a29e;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.dashb-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* ── Botones ─────────────────────────────────────────────── */
+.dashb-btn-sm {
+    font-size: .72rem;
+    font-family: 'Sora', sans-serif;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid #e7e5e4;
+    color: #fff;
+    text-decoration: none;
+    transition: all .15s;
+    background: #0d9488;
+    cursor: pointer;
+}
+
+.dashb-btn-sm:hover {
+    background: #1a1917;
+    color: #fff;
+    border-color: #1a1917;
+}
+
+.dashb-btn-primary {
+    flex: 1;
+    padding: 10px;
+    border-radius: 999px;
+    background: #0d9488;
+    color: #fff;
+    border: none;
+    font-family: 'Sora', sans-serif;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: opacity .15s;
+}
+
+.dashb-btn-primary:hover {
+    opacity: .85;
+}
+
+.dashb-btn-secondary {
+    flex: 1;
+    padding: 10px;
+    border-radius: 999px;
+    background: transparent;
+    color: #78716c;
+    border: 1px solid #e7e5e4;
+    font-family: 'Sora', sans-serif;
+    font-size: .85rem;
+    cursor: pointer;
+}
+
+/* ── Perfil ──────────────────────────────────────────────── */
+.dashb-perfil-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.dashb-perfil-campo label {
+    display: block;
+    font-size: .67rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #a8a29e;
+    margin-bottom: 3px;
+}
+
+.dashb-perfil-campo span {
+    font-size: .9rem;
+    color: #1c1917;
+    font-weight: 500;
+}
+
+.dashb-perfil-full {
+    grid-column: 1 / -1;
+}
+
+.dashb-perfil-vacio {
+    text-align: center;
+    padding: 24px 0;
+    color: #a8a29e;
+    font-size: .85rem;
+}
+
+.dashb-perfil-vacio a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: #1a1917;
+    color: #fff;
+    font-size: .78rem;
+    text-decoration: none;
+}
+
+/* ── Calendario ──────────────────────────────────────────── */
+.dashb-cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.dashb-cal-mes {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: #1c1917;
+}
+
+.dashb-cal-nav {
+    display: flex;
+    gap: 6px;
+}
+
+.dashb-cal-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #e7e5e4;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    color: #78716c;
+    transition: all .15s;
+}
+
+.dashb-cal-btn:hover {
+    background: #1a1917;
+    color: #fff;
+    border-color: #1a1917;
+}
+
+.dashb-cal-dias-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+}
+
+.dashb-cal-ds {
+    text-align: center;
+    font-size: .65rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #a8a29e;
+    padding: 4px 0;
+}
+
+.dashb-cal-celdas {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.dashb-cal-celda {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: .78rem;
+    color: #44403c;
+}
+
+.dashb-cal-celda-hoy {
+    background: #0d9488;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.dashb-cal-celda-turno {
+    background: rgba(251, 191, 36, .1);
+}
+
+.dashb-cal-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: 2px;
+}
+
+.dashb-leyenda {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.dashb-leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dashb-leyenda-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.dashb-leyenda-label {
+    font-size: .68rem;
+    color: #a8a29e;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+/* ── Lista de turnos ─────────────────────────────────────── */
+.dashb-turno-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f4;
+}
+
+.dashb-turno-item:last-child {
+    border-bottom: none;
+}
+
+.dashb-turno-fecha {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #f5f4f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dashb-turno-fecha-dia {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1c1917;
+    line-height: 1;
+}
+
+.dashb-turno-fecha-mes {
+    font-size: .6rem;
+    text-transform: uppercase;
+    color: #a8a29e;
+    letter-spacing: .05em;
+}
+
+.dashb-turno-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dashb-turno-hora {
+    font-size: .88rem;
+    font-weight: 500;
+    color: #1c1917;
+}
+
+.dashb-turno-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-top: 2px;
+}
+
+.dashb-turno-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.dashb-turnos-vacio {
+    text-align: center;
+    padding: 28px 0;
+    color: #a8a29e;
+    font-size: .85rem;
+}
+
+/* ── Modal gestionar turno ───────────────────────────────── */
+.dashb-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 16px;
+}
+
+.dashb-modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+}
+
+.dashb-modal h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #1c1917;
+    margin-bottom: 20px;
+}
+
+.dashb-modal-campo label {
+    display: block;
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #a8a29e;
+    margin-bottom: 5px;
+}
+
+.dashb-modal-campo input,
+.dashb-modal-campo select {
+    width: 100%;
+    border: 1px solid #e7e5e4;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: .88rem;
+    font-family: 'Sora', sans-serif;
+    color: #1c1917;
+    outline: none;
+    transition: border-color .15s;
+}
+
+.dashb-modal-campo input:focus,
+.dashb-modal-campo select:focus {
+    border-color: #1a1917;
+}
+
+.dashb-modal-acciones {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+    .dashb-badge-rol {
+        font-size: .62rem;
+        padding: 4px 10px;
+        letter-spacing: .04em;
+    }
+}

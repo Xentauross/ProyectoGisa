@@ -1,8 +1,17 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { useState } from 'react'; // 1. Importar useState
+import { useState } from 'react';
 
+// Props que llegan desde HorarioController@edit:
+//   · auth    → usuario logueado
+//   · horario → el registro que vamos a editar (con sus datos actuales)
+//   · users   → lista de empleados para el selector
 export default function Edit({ auth, horario, users }) {
+
+    // ── Conversión de fecha UTC → formato local para el input ─
+    // Los inputs type="datetime-local" esperan el formato "YYYY-MM-DDTHH:mm".
+    // Las fechas en BD están en UTC, así que las convertimos a hora local
+    // restando el offset del navegador antes de mostrarlas.
     const toLocalInput = (iso) => {
         if (!iso) return '';
         const d = new Date(iso);
@@ -10,6 +19,13 @@ export default function Edit({ auth, horario, users }) {
         return new Date(d - offset).toISOString().slice(0, 16);
     };
 
+    // ── useForm de Inertia ────────────────────────────────────
+    // useForm es como un useState especializado para formularios:
+    // · data      → objeto con los valores actuales del formulario
+    // · setData   → función para actualizar un campo (setData('campo', valor))
+    // · put       → envía una petición PUT (para actualizar)
+    // · processing→ true mientras se está enviando la petición
+    // · errors    → errores de validación que devuelve el servidor
     const { data, setData, put, processing, errors } = useForm({
         user_id: horario.user_id,
         inicio_turno: toLocalInput(horario.inicio_turno),
@@ -17,15 +33,18 @@ export default function Edit({ auth, horario, users }) {
         estado: horario.estado,
     });
 
-    // 2. Estado para almacenar lo que el usuario escribe en el buscador
+    // Estado para el texto del buscador de empleados
     const [busqueda, setBusqueda] = useState('');
 
+    // Función que se llama al enviar el formulario.
+    // put() de Inertia envía una petición PUT a la ruta indicada.
     function submit(e) {
         e.preventDefault();
         put(route('horarios.update', horario.id));
     }
 
-    // 3. Filtrar los usuarios en base al DNI o el Nombre
+    // Filtramos la lista de usuarios según lo que se escribe en el buscador.
+    // Buscamos por DNI o por nombre completo (igual que en Create.jsx).
     const usuariosFiltrados = users.filter(u => {
         const dni = u.perfil?.dni?.toLowerCase() || '';
         const nombreCompleto = u.perfil
@@ -57,8 +76,9 @@ export default function Edit({ auth, horario, users }) {
                     <div className="bg-white shadow rounded-lg p-6">
                         <form onSubmit={submit} className="space-y-5">
 
+                            {/* Selector de empleado con buscador */}
                             <Campo label="Buscar y Seleccionar Empleado" error={errors.user_id}>
-                                {/* 4. Input buscador */}
+                                {/* Buscador: actualiza el estado 'busqueda' que filtra el select */}
                                 <input
                                     type="text"
                                     placeholder="Buscar por DNI o nombre..."
@@ -67,7 +87,8 @@ export default function Edit({ auth, horario, users }) {
                                     className="w-full border rounded px-3 py-2 text-sm mb-2"
                                 />
 
-                                {/* 5. Select con los resultados ya filtrados */}
+                                {/* Select: value viene de useForm (data.user_id).
+                                    Al cambiar, setData actualiza el objeto data de useForm. */}
                                 <select
                                     value={data.user_id}
                                     onChange={e => setData('user_id', e.target.value)}
@@ -88,6 +109,7 @@ export default function Edit({ auth, horario, users }) {
                                 )}
                             </Campo>
 
+                            {/* Inputs de fecha/hora en grid de 2 columnas */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Campo label="Inicio del turno" error={errors.inicio_turno}>
                                     <input
@@ -108,6 +130,7 @@ export default function Edit({ auth, horario, users }) {
                                 </Campo>
                             </div>
 
+                            {/* Select de estado */}
                             <Campo label="Estado" error={errors.estado}>
                                 <select
                                     value={data.estado}
@@ -120,6 +143,7 @@ export default function Edit({ auth, horario, users }) {
                                 </select>
                             </Campo>
 
+                            {/* Botón de envío */}
                             <button
                                 type="submit"
                                 disabled={processing}
@@ -135,6 +159,7 @@ export default function Edit({ auth, horario, users }) {
     );
 }
 
+// Componente auxiliar reutilizable (igual que en Create.jsx)
 function Campo({ label, error, children }) {
     return (
         <div>

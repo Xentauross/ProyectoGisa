@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect, memo } from 'react';
+// Los alérgenos son fijos (definidos por ley europea), por eso
+// los importamos de las constantes en vez de recibirlos del servidor
 import { ALERGENOS_COMUNES } from './welcomeConstants';
 
 /**
@@ -6,14 +8,19 @@ import { ALERGENOS_COMUNES } from './welcomeConstants';
  * Semántica inversa: los productos que los contengan se ocultan.
  */
 const AlergenoSelect = memo(function AlergenoSelect({
+    // array de IDs de alérgenos que queremos evitar
     filtroAlergenos = [],
+    // función para añadir/quitar un alérgeno
     toggleAlergeno,
+    // función para quitar todos los alérgenos de golpe
     onClear,
 }) {
     const [isOpen, setIsOpen] = useState(false);
+    // busqueda aquí es el texto del buscador INTERNO del dropdown
     const [busqueda, setBusqueda] = useState('');
     const ref = useRef(null);
 
+    // ── CERRAR AL HACER CLIC FUERA DEL COMPONENTE ─────────────
     useEffect(() => {
         function onOut(e) {
             if (ref.current && !ref.current.contains(e.target)) {
@@ -24,19 +31,25 @@ const AlergenoSelect = memo(function AlergenoSelect({
         return () => document.removeEventListener('mousedown', onOut);
     }, []);
 
+    // ── CERRAR CON ESCAPE ──────────────────────────────────────
     useEffect(() => {
         function onKey(e) { if (e.key === 'Escape') { setIsOpen(false); setBusqueda(''); } }
         document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
     }, []);
 
+    // Filtramos la lista de alérgenos según lo que escriba el usuario
+    // en el buscador interno del dropdown
     const filtrados = ALERGENOS_COMUNES.filter(a =>
         a.nombre.toLowerCase().includes(busqueda.toLowerCase())
     );
+    // Total de alérgenos marcados como "a evitar"
     const total = filtroAlergenos.length;
 
     return (
         <div className="alg-select-wrapper" ref={ref}>
+
+            {/* ── BOTÓN TRIGGER ── */}
             <button
                 className={[
                     'alg-select-trigger',
@@ -50,10 +63,11 @@ const AlergenoSelect = memo(function AlergenoSelect({
             >
                 <span className="alg-trigger-label">
                     {total === 0
-                        ? 'Sin restricciones'
+                        ? 'Sin restricciones'  // no hay ninguno marcado
                         : total === 1
+                            // exactamente uno: "Sin Gluten", "Sin Lácteos", etc.
                             ? `Sin ${ALERGENOS_COMUNES.find(a => a.id === filtroAlergenos[0])?.nombre}`
-                            : `${total} alérgenos excluidos`
+                            : `${total} alérgenos excluidos`  // dos o más
                     }
                 </span>
                 {total > 0
@@ -62,11 +76,17 @@ const AlergenoSelect = memo(function AlergenoSelect({
                 }
             </button>
 
+            {/* ── DROPDOWN ── */}
             {isOpen && (
                 <div className="alg-dropdown" role="listbox" aria-multiselectable="true" aria-label="Alérgenos a excluir">
+
+                    {/* Texto explicativo de la semántica inversa.
+                        Es importante que el usuario entienda que marcar = excluir */}
                     <div className="alg-dropdown-hint">
                         Marca los alérgenos que quieres <strong>evitar</strong>. Los platos que los contengan desaparecerán de la carta.
                     </div>
+
+                    {/* Buscador interno */}
                     <div className="alg-dropdown-search">
                         <input
                             type="text"
@@ -79,6 +99,7 @@ const AlergenoSelect = memo(function AlergenoSelect({
                         />
                     </div>
 
+                    {/* Botón para quitar todas las restricciones (solo si hay alguna) */}
                     {total > 0 && (
                         <div className="alg-dropdown-actions">
                             <button className="alg-action-btn" onClick={() => { onClear(); setBusqueda(''); }}>
@@ -87,6 +108,7 @@ const AlergenoSelect = memo(function AlergenoSelect({
                         </div>
                     )}
 
+                    {/* Lista de alérgenos */}
                     <ul className="alg-options-list">
                         {filtrados.length === 0 ? (
                             <li className="alg-option-empty">Sin resultados</li>
@@ -104,6 +126,7 @@ const AlergenoSelect = memo(function AlergenoSelect({
                                 >
                                     <span className="alg-option-icon" aria-hidden="true">{a.icono}</span>
                                     <span className="alg-option-label">{a.nombre}</span>
+                                    {/* Si está seleccionado (marcado para excluir), mostramos una X */}
                                     {sel && <span className="alg-option-check" aria-hidden="true"><i className="ti ti-x" /></span>}
                                 </li>
                             );
@@ -119,6 +142,8 @@ const AlergenoSelect = memo(function AlergenoSelect({
                 </div>
             )}
 
+            {/* ── TAGS DE RESTRICCIONES ACTIVAS ── */}
+            {/* Visibles aunque el dropdown esté cerrado */}
             {total > 0 && (
                 <div className="alg-tags" role="list" aria-label="Alérgenos excluidos">
                     {filtroAlergenos.map(id => {
